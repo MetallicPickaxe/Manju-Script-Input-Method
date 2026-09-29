@@ -1,4 +1,4 @@
-# Input scheme: HU (1994). Pure ASCII — no diacritics, no apostrophes (uu/sh/ch/zh/kk/gg/
+# Input scheme: HU (1994). Pure ASCII: no diacritics, no apostrophes (uu/sh/ch/zh/kk/gg/
 # hh/c/cy/z/rr/chy/zhy). token -> codepoint ONLY; transliteration-free (on-screen = token
 # as typed; dict lookup transliterates codepoints). NOTE: the empty-rime ᡯᡳ᠌ is homographic
 # with ᡯ ("z") in Hu and is therefore not separately inputtable here.

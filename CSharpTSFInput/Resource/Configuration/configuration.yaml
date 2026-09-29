@@ -30,11 +30,11 @@ font:
 #   abkai:       Abkai (v/x/q, ' for loan-velars & empty-rimes: cy'/zy'/r'/sy'/qy'/jy')
 #   babelpad:    BabelPad (pure ASCII: uu/x/kh/gh/hh/c/ts/tsy/dz/z/sy/chi/zhi)
 #   hu:          Hu (pure ASCII: uu/sh/ch/zh/kk/gg/hh/c/cy/z/rr/chy/zhy …)
-#   mollendorff: canonical Möllendorff letters (ū/š/ž, k'/g'/h', ts', c'y …)
+#   mollendorff: canonical Möllendorff letters (ū/š/ž, k'/g'/h', ts', c'y …) (default)
 #   norman:      Norman 2013 (ū/š/ž, k'/g'/h', ts, cy; no ts'/c'y apostrophe)
-#   refined:     Refined Romanisation: ASCII spellings with a few aliases (default)
+#   refined:     Refined Romanisation: ASCII spellings with a few aliases
 keymap:
-  scheme: refined
+  scheme: mollendorff
 
 # On-screen romanization. INDEPENDENT of the input scheme.
 #   abkai:        always show Abkai / Taiqing (the transliteration of abkai.net), whatever you type in

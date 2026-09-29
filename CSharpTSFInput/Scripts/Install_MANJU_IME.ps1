@@ -7,17 +7,16 @@
 # -L and -P are the short names of -LanguageIdentifier and -InstallPath.
 [CmdletBinding()]
 param(
-    [switch]$Silent,
     # Print the ordered operation plan and do nothing else.
     [switch]$WhatIf,
     # The Windows language to register under, as the four hex digits of its language identifier
-    # (LANGID: 0409, 0804, ...). It must already be in this user's Windows language list. Default: the
+    # (LANGID: 0409, 0804, …). It must already be in this user’s Windows language list. Default: the
     # Windows display language when it is in the list, otherwise the first language of the list.
     [Alias('L')]
     [string]$LanguageIdentifier,
     # The folder to install into, as a full path. Default: where this delivery is. A folder given here
-    # first receives a copy of the delivery's Runtime, Installer and Script folders; the language is
-    # written into that copy's settings file and that copy is registered.
+    # first receives a copy of the delivery’s Runtime, Installer and Script folders; the language is
+    # written into that copy’s settings file and that copy is registered.
     [Alias('P')]
     [string]$InstallPath
 )
@@ -42,20 +41,22 @@ $ErrorActionPreference = "Stop"
 $System32 = Join-Path $env:SystemRoot 'System32'
 
 # ── WHICH WINDOWS LANGUAGE THIS INPUT METHOD REGISTERS UNDER ───────────────────
-# Only a language already in this user's Windows language list, never a new one: adding a language
+# Only a language already in this user’s Windows language list, never a new one: adding a language
 # makes Windows download and install it. The list is read with Get-WinUserLanguageList, the cmdlet
 # step 4 writes back through, so the entry chosen here is the entry step 4 finds by its tag.
 # The LANGID of a language is the one its own input methods are registered under: the part of each
-# InputMethodTips entry before the colon. The four transient LANGIDs are left out. Windows assigns
-# them per user to languages that have no locale ID, and the language one of them stands for can
-# change when the list changes.
+# InputMethodTips entry before the colon. A language that has no language identifier of its own is left
+# out: its LANGID is one of the fourteen of [MS-LCID] 2.2.1, "Locale Names without LCIDs" (the transient
+# ones Windows assigns per user, and the two custom ones). Windows gives such a language a temporary
+# identifier and does not keep an input method under it.
+$NoOwnLangIds = @('2000', '2400', '2800', '2C00', '3000', '3400', '3800', '3C00', '4000', '4400', '4800', '4C00', '0C00', '1000')
 function Get-ManjuInstalledLanguages {
     $list = Get-WinUserLanguageList
     foreach ($lang in $list) {
         $id = @($lang.InputMethodTips | ForEach-Object { ($_ -split ':')[0] })[0]
         if ($id -notmatch '^[0-9A-Fa-f]{4}$') { continue }
         $id = $id.ToUpperInvariant()
-        if ($id -in '2000', '2400', '2800', '2C00') { continue }
+        if ($id -in $NoOwnLangIds) { continue }
         [pscustomobject]@{ Tag = $lang.LanguageTag; LangId = $id; Name = $lang.LocalizedName }
     }
 }
@@ -107,10 +108,10 @@ function Set-ManjuLangIdSetting {
 # Join-Path or Resolve-Path: those ask the file system, and under -WhatIf the copy does not exist yet.
 $ManjuDeliveryFolders = 'Runtime', 'Installer', 'Script'
 # Written out
-# here, because Windows PowerShell's older .NET gives three more.
+# here, because Windows PowerShell’s older .NET gives three more.
 $ManjuInvalidPathCharacters = [char[]](@([char]0x7C) + @(0..31 | ForEach-Object { [char]$_ }))
 
-# The DLL Windows has registered as this input method's COM server, or $null when none is.
+# The DLL Windows has registered as this input method’s COM server, or $null when none is.
 function Get-ManjuRegisteredDll {
     param([string]$Clsid)
     $key = "Registry::HKEY_CLASSES_ROOT\CLSID\$Clsid\InProcServer32"
@@ -186,13 +187,13 @@ function Get-ManjuTargetRefusal {
         }
         if ([IO.File]::Exists($Target)) { return 'That is a file, not a folder.' }
     } catch {
-        # Windows PowerShell's .NET also refuses < > and " while it makes a full path.
+        # Windows PowerShell’s .NET also refuses < > and " while it makes a full path.
         return $invalid
     }
     return $null
 }
 
-# Copies the delivery's three folders from $Source into $Target, file by file, replacing files of the
+# Copies the delivery’s three folders from $Source into $Target, file by file, replacing files of the
 # same name, and returns how many files it copied. It deletes nothing, writes nothing outside $Target,
 # and follows no junction or symbolic link out of the delivery.
 function Copy-ManjuDelivery {
@@ -282,8 +283,8 @@ if ($LanguageIdentifier) {
     $Chosen = @($Languages | Where-Object { $_.LangId -eq $Requested })[0]
     if (-not $Chosen) {
         $Offered = ($Languages | ForEach-Object { "$($_.LangId) $($_.Tag)" }) -join ', '
-        if ($Requested -in '2000', '2400', '2800', '2C00') {
-            Write-Host "[ERROR] LANGID $Requested is a transient LANGID. Windows assigns it per user to a language that has no locale ID, and the language it stands for can change when the list changes, so setup does not register under it. Choose one of: $Offered." -ForegroundColor Red
+        if ($Requested -in $NoOwnLangIds) {
+            Write-Host "[ERROR] LANGID $Requested belongs to a language that has no language identifier of its own. Windows gives such a language a temporary identifier and does not keep an input method under it, so setup does not register under it. Choose one of: $Offered." -ForegroundColor Red
         } else {
             Write-Host "[ERROR] LANGID $Requested is not in the Windows language list of this user, and setup does not add languages to Windows. Add the language in Windows Settings first, or choose one of: $Offered." -ForegroundColor Red
         }
@@ -436,7 +437,7 @@ if ($WhatIf) {
 # --- Step 4: add to the language list ---
 # Only the entry whose tag was chosen is touched, and it must already be in the list: when it is not,
 # the step stops before Set-WinUserLanguageList and nothing is changed. Setup never adds a language.
-# Get-WinUserLanguageList can return a language's InputMethodTips as a fixed-size IList wrapper,
+# Get-WinUserLanguageList can return a language’s InputMethodTips as a fixed-size IList wrapper,
 # so .Add() throws "Collection was of a fixed size." The entry is therefore rebuilt via
 # New-WinUserLanguageList for the same tag (which produces a mutable Tips collection): its tips are
 # cleared and the existing ones copied, so it keeps exactly the input methods it had, the new tip is
@@ -455,7 +456,7 @@ try {
         if ($lang.LanguageTag -eq $LangTag) {
             $langFound = $true
             if ($lang.InputMethodTips -contains $tip) {
-                # Already present — keep as-is, no rebuild needed.
+                # Already present: keep it as it is, no rebuild needed.
                 $newList.Add($lang)
                 Write-Host "    Already in the language list." -ForegroundColor Gray
             } else {

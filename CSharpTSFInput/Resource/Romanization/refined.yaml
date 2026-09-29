@@ -1,9 +1,9 @@
-# Romanization: REFINED ROMANISATION (id "refined") (code point -> Latin). The canonical ASCII form of our hybrid scheme — the
+# Romanization: REFINED ROMANISATION (id "refined") (code point -> Latin). The canonical ASCII form of our hybrid scheme: the
 # PRIMARY (first-listed) alias per code point from schemes/refined.yaml. Pure ASCII (apostrophe = ').
 # Use as display.scheme: refined to always show our canonical form regardless of which scheme was typed
 # (differs from display.scheme: input, which echoes the exact keystrokes). Greedy longest-match.
 map:
-  # digraphs (empty-rime syllables) — matched first
+  # digraphs (empty-rime syllables), matched first
   U+186F+U+1873+U+180C: "dzy"
   U+186E+U+185F: "tsy"
   U+1830+U+185F: "sy"
@@ -37,7 +37,7 @@ map:
   U+1875: "r"
   U+1876: "f"
   U+1838: "w"
-  # Loanword letters (ASCII apostrophe — refined is the ASCII-hybrid scheme)
+  # Loanword letters (ASCII apostrophe: refined is the ASCII-hybrid scheme)
   U+183A: "k'"
   U+186C: "g'"
   U+186D: "h'"

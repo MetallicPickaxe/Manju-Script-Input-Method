@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -21,11 +22,50 @@ namespace CSharpTSFInput
         public static bool IsChromiumWindowClass(string? className) =>
             className != null && className.StartsWith("Chrome_WidgetWin_", StringComparison.Ordinal);
 
-        /// <summary>Does passing this key to the host end the word first? Tab, with any modifier, while a
-        /// word is being typed in a Chromium host: the host moves the focus on it and commits the
-        /// composition text itself. The key still goes to the host.</summary>
+        /// <summary>Is this a Chromium window inside another program's top-level window? A WebView2 control,
+        /// and any other program that embeds Chromium, puts the page in a window of class
+        /// Chrome_RenderWidgetHostHWND, under windows of class Chrome_WidgetWin_ and a number.</summary>
+        public static bool IsEmbeddedChromiumClass(string? className) =>
+            className == "Chrome_RenderWidgetHostHWND" || IsChromiumWindowClass(className);
+
+        /// <summary>Is a word typed in this chain of windows typed in a Chromium host? <paramref name="classes"/>
+        /// holds the classes of the windows from the focus window up to its top-level window, that one last:
+        /// a Chromium top-level window, as in Edge, or a Chromium window below another program's top-level
+        /// window, as in a WebView2 control.</summary>
+        public static bool IsChromiumChain(IReadOnlyList<string> classes)
+        {
+            if (classes.Count == 0) return false;
+            if (IsChromiumWindowClass(classes[classes.Count - 1])) return true;
+            for (int i = 0; i < classes.Count - 1; i++)
+                if (IsEmbeddedChromiumClass(classes[i])) return true;
+            return false;
+        }
+
+        public const uint VK_LWIN = 0x5B, VK_RWIN = 0x5C;
+
+        /// <summary>A modifier or lock key: Shift, Ctrl, Alt or Win, on either side, Caps Lock, Num Lock or
+        /// Scroll Lock. Given to the host alone, it does not end the word.</summary>
+        public static bool IsModifierOrLockKey(uint vk) => vk switch
+        {
+            0x10 or 0x11 or 0x12 or 0xA0 or 0xA1 or 0xA2 or 0xA3 or 0xA4 or 0xA5 => true,   // Shift, Ctrl, Alt
+            VK_LWIN or VK_RWIN => true,
+            0x14 or 0x90 or 0x91 => true,                                                 // Caps Lock, Num Lock, Scroll Lock
+            _ => false,
+        };
+
+        /// <summary>Does passing this key to the host end the word first, with the mixed string? Any key the
+        /// input method gives the host while a word is being typed in a Chromium host, a modifier or lock
+        /// key alone excepted: the host acts on the key (Tab and F6 move the focus, Ctrl+L and Ctrl+F open
+        /// a bar, Ctrl+PgDn switches the tab) and commits the composition text itself. The key still goes
+        /// to the host.</summary>
         public static bool EndsWordBeforePassingKey(uint virtualKey, bool composing, bool chromiumHost) =>
-            virtualKey == VK_TAB && composing && chromiumHost;
+            composing && chromiumHost && !IsModifierOrLockKey(virtualKey);
+
+        /// <summary>Is this posted key message a key going down with Alt held, other than Tab, Esc and the
+        /// modifiers (Alt+D, say)? The host acts on it, and the foreground may change after that; the word
+        /// ends first, with the mixed string, while the foreground is still the host's.</summary>
+        public static bool IsAltComboKeyPress(uint message, nuint wParam) =>
+            message == 0x0104 && wParam != VK_TAB && wParam != 0x1B && !IsModifierOrLockKey((uint)wParam);   // WM_SYSKEYDOWN
 
         /// <summary>Does this posted message end the word, with the mixed string, before the host sees
         /// it? A mouse button, or a pen or touch contact, going down: in a Chromium host a press anywhere
@@ -85,6 +125,32 @@ namespace CSharpTSFInput
                     return false;
             }
         }
+
+        /// <summary>Is this sent message the host window losing the user to another window of the same
+        /// program, a second Edge window say? WM_NCACTIVATE deactivating the window while the foreground is
+        /// another top-level window of this process; WM_ACTIVATE deactivating it for such a window. The
+        /// input method's own windows do not count. The word ends with the mixed string before the host
+        /// sees the message. <paramref name="rootOf"/> answers the top-level window of a window, and
+        /// <paramref name="isOwn"/> whether a window is one of the input method's.</summary>
+        public static bool IsOtherWindowOfThisProgramMessage(uint message, nuint wParam, nint lParam, nint hwnd, Func<nint, uint> processOf,
+            uint self, Func<nint> foreground, Func<nint, nint> rootOf, Func<nint, bool> isOwn)
+        {
+            nint other;
+            switch (message)
+            {
+                case WM_NCACTIVATE:
+                    if (wParam != 0) return false;
+                    other = foreground();
+                    break;
+                case WM_ACTIVATE:
+                    if ((wParam & 0xFFFF) != WA_INACTIVE) return false;
+                    other = lParam;
+                    break;
+                default:
+                    return false;
+            }
+            return other != 0 && processOf(other) == self && !isOwn(other) && rootOf(other) != rootOf(hwnd);
+        }
     }
 
     // ══════════════════════════════════════════════════════════════════════════════════════════════
@@ -97,14 +163,20 @@ namespace CSharpTSFInput
     // makes (the mixed string, or nothing at a switch-away) then no longer reaches the page, and the
     // placeholder, U+00B7, would be left in the document.
     //
-    // So in such a host this service ends the word itself, by the same rules, before the host acts:
-    // Tab, which the host is still given, and a mouse button pressed on one of the host's windows end it
-    // with the mixed string (picked Manchu, unpicked Latin); the window losing the user to another program
-    // ends it as ESC does. The press and the activation are seen through two hooks on this thread, set
-    // the first time a word is typed in a Chromium host and removed at Deactivate: WH_GETMESSAGE for the
-    // posted mouse messages and the posted Alt+Tab key, WH_CALLWNDPROC for the sent WM_NCACTIVATE,
-    // WM_ACTIVATE, WM_ACTIVATEAPP and WM_KILLFOCUS. At Alt+Tab Chromium ends the composition on the
-    // WM_SYSKEYUP of Tab, which comes before every activation message.
+    // So in such a host this service ends the word itself, by the same rules, before the host acts. With
+    // the mixed string (picked Manchu, unpicked Latin): any key the host is given, a modifier or lock key
+    // alone excepted (Tab, F6, Ctrl+L, Ctrl+PgDn), Alt with a key other than Tab and Esc, a mouse button
+    // pressed on one of the host's windows, and the window losing the user to another window of the same
+    // program. As ESC does: the window losing the user to another program, Alt+Tab and Alt+Esc. While Alt
+    // is held the composition range holds nothing, so a switch-away that comes too late for an edit session
+    // leaves nothing either. Win is left to these rules: the Start menu and Win+D take the foreground, a
+    // switch-away. Nothing here follows the Win key itself: when the shell takes Win, alone or with a key,
+    // its release does not reach this thread. The keys,
+    // the press and the activation are seen through two hooks on this thread, set the first time a word
+    // is typed in a Chromium host and removed at Deactivate: WH_GETMESSAGE for the posted mouse and key
+    // messages, WH_CALLWNDPROC for the sent WM_NCACTIVATE, WM_ACTIVATE, WM_ACTIVATEAPP and WM_KILLFOCUS.
+    // At Alt+Tab Chromium ends the composition on the WM_SYSKEYUP of Tab, which comes before every
+    // activation message.
     // They act only while a word is being typed. Other hosts (Notepad, Word) end a composition through
     // TSF and take the rewrite, so nothing here runs for them.
     // ══════════════════════════════════════════════════════════════════════════════════════════════
@@ -112,7 +184,7 @@ namespace CSharpTSFInput
     {
         private const int WH_GETMESSAGE = 3, WH_CALLWNDPROC = 4;
         private const nuint PM_REMOVE = 1;
-        private const uint GA_ROOT = 2;
+        private const uint GA_PARENT = 1, GA_ROOT = 2;
 
         [DllImport("user32.dll", EntryPoint = "SetWindowsHookExW")]
         private static extern nint SetWindowsHookExW(int idHook, nint lpfn, nint hmod, uint threadId);
@@ -144,8 +216,10 @@ namespace CSharpTSFInput
             return n > 0 ? new string(buffer, 0, n) : string.Empty;
         }
 
-        /// <summary>Is the window this word is typed in one of a Chromium program's? The top-level window
-        /// of the context's view, or of this thread's focus window, is asked for its class.</summary>
+        /// <summary>Is the window this word is typed in one of Chromium's? The window of the context's view,
+        /// or this thread's focus window, and the windows above it up to its top-level window are asked for
+        /// their classes (<see cref="ChromiumHost.IsChromiumChain"/>): Edge has a Chromium top-level window,
+        /// a WebView2 control has Chromium windows under the top-level window of its program.</summary>
         private bool IsChromiumHost(NativeMethods.ITfContext? context)
         {
             nint hwnd = 0;
@@ -156,7 +230,12 @@ namespace CSharpTSFInput
             }
             catch { hwnd = 0; }
             if (hwnd == 0) hwnd = GetFocusWindow();
-            return hwnd != 0 && ChromiumHost.IsChromiumWindowClass(ClassOf(GetAncestor(hwnd, GA_ROOT)));
+            if (hwnd == 0) return false;
+            nint root = GetAncestor(hwnd, GA_ROOT);
+            var classes = new List<string>();
+            for (nint w = hwnd; w != 0 && classes.Count < 32; w = w == root ? 0 : GetAncestor(w, GA_PARENT))
+                classes.Add(ClassOf(w));
+            return ChromiumHost.IsChromiumChain(classes);
         }
 
         /// <summary>Sets the two hooks on this thread, once, when a word is typed in a Chromium host.</summary>
@@ -194,6 +273,8 @@ namespace CSharpTSFInput
                         service.EndWordBeforeHost(switchAway: false, null);
                     else if (ChromiumHost.IsSwitchAwayKeyMessage(msg->message, msg->wParam))
                         service.EndWordBeforeHost(switchAway: true, null);
+                    else if (ChromiumHost.IsAltComboKeyPress(msg->message, msg->wParam))
+                        service.EndWordBeforeHost(switchAway: false, null);
                     else if (ChromiumHost.IsAltPress(msg->message, msg->wParam, msg->lParam))
                         service.SetHostTextBlank(blank: true, "Alt down");
                     else if (ChromiumHost.IsAltRelease(msg->message, msg->wParam))
@@ -214,11 +295,16 @@ namespace CSharpTSFInput
                     HookCwp* cwp = (HookCwp*)lParam;
                     if (ChromiumHost.IsSwitchAwayMessage(cwp->message, cwp->wParam, cwp->lParam, ProcessOfWindow, (uint)Environment.ProcessId, ForegroundWindow))
                         service.EndWordBeforeHost(switchAway: true, null);
+                    else if (ChromiumHost.IsOtherWindowOfThisProgramMessage(cwp->message, cwp->wParam, cwp->lParam, cwp->hwnd, ProcessOfWindow,
+                                 (uint)Environment.ProcessId, ForegroundWindow, RootOfWindow, IsOwnWindow))
+                        service.EndWordBeforeHost(switchAway: false, null);
                 }
             }
             catch { }
             return CallNextHookEx(0, code, wParam, lParam);
         }
+
+        private static nint RootOfWindow(nint hwnd) => hwnd == 0 ? 0 : GetAncestor(hwnd, GA_ROOT);
 
         private static uint ProcessOfWindow(nint hwnd)
         {

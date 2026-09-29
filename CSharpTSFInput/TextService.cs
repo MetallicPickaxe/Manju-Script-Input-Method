@@ -37,8 +37,8 @@ namespace CSharpTSFInput
         // Shift-tap manju<->en mode toggle (a light tap on Shift switches). A lone Shift
         // press+release (no other key in between) flips _englishMode; in EN mode the IME owns
         // nothing so Latin passes through raw. Tap is detected on Shift key-up in OnKeyUp.
-        // _englishMode is the fast in-memory cache; the persisted source of truth is
-        // the keyboard conversion-mode compartment (NATIVE=manju / ALPHANUMERIC=EN). Activate reads it
+        // _englishMode is the fast in-memory cache; the persisted source of truth is a compartment of
+        // Manju IME's own on the thread (GUID_COMPARTMENT_MANJU_INPUTMODE). Activate reads it
         // (InitInputModeFromCompartment) so the mode survives focus cycles — incl. the per-edit churn
         // in contexts like Explorer's rename field — and every toggle writes it back.
         private bool _englishMode = false;
@@ -155,7 +155,7 @@ namespace CSharpTSFInput
 			    // host on click. Null/no-op when the module isn't compiled in or is disabled.
 			    this.Engine_Processor.GetEngine().DictionaryModule?.OnActivate();
 
-			    // Restore the input mode from the conversion-mode compartment (so the
+			    // Restore the input mode from Manju IME's own mode compartment (so the
 			    // mode persists across activations / focus churn), then add the tray input-mode button.
 			    // Both are best-effort and self-guarded — a failure here must not break the IME.
 			    InitInputModeFromCompartment();
@@ -2344,6 +2344,7 @@ namespace CSharpTSFInput
 		private void SetInputMode (bool english)
 		{
 			_englishMode = english;
+			WriteModeCompartment (english);
 			WriteConversionModeCompartment (english);
 			_langBarButton?.NotifyUpdate ();
 			if (english && this.Engine_Processor.IsComposing ())
@@ -2353,8 +2354,31 @@ namespace CSharpTSFInput
 			}
 		}
 
-		// Persist the mode to the keyboard conversion-mode compartment (NATIVE=manju / ALPHANUMERIC=EN)
-		// so it survives activation churn and the system input indicator agrees. Best-effort.
+		// The mode is kept in a compartment of Manju IME's own on the thread. No host knows its GUID, so no
+		// host can write it. A host can write the keyboard conversion-mode compartment: read at activation, a
+		// value written there would put Manju IME in Latin input, every key going straight to the document,
+		// whatever the user chose with Shift. That compartment is written, for the system input indicator,
+		// and never read. Each value carries a tag, so a compartment never written, whose read gives
+		// whatever the variant held, is no choice made.
+		private static readonly Guid GUID_COMPARTMENT_MANJU_INPUTMODE = new ("104F139A-83C1-4AAC-8E73-8AF245D636ED");
+		private const int InputModeTagManchu = 0x4D4A0000, InputModeTagLatin = 0x4D4A0001;
+
+		private void WriteModeCompartment (bool english)
+		{
+			try
+			{
+				if (this.Mgr_Thread is not NativeMethods.ITfCompartmentMgr compMgr) return;
+				Guid g = GUID_COMPARTMENT_MANJU_INPUTMODE;
+				int hr = compMgr.GetCompartment (in g, out NativeMethods.ITfCompartment comp);
+				if (hr != NativeMethods.S_OK || comp == null) return;
+				var v = new VARIANT { vt = NativeMethods.VT_I4, lVal = english ? InputModeTagLatin : InputModeTagManchu };
+				comp.SetValue (this.Id_Client, in v);
+			}
+			catch (Exception) { }
+		}
+
+		// Write the mode to the keyboard conversion-mode compartment (NATIVE=manju / ALPHANUMERIC=EN) so
+		// the system input indicator agrees. Best-effort.
 		private void WriteConversionModeCompartment (bool english)
 		{
 			try
@@ -2373,19 +2397,19 @@ namespace CSharpTSFInput
 			catch (Exception) { }
 		}
 
-		// Restore the mode from the compartment on activation (so it persists across focus cycles).
-		// An empty / never-set compartment (vt != VT_I4) leaves the default manju mode untouched.
+		// Restore the mode from Manju IME's own compartment on activation (so it persists across focus
+		// cycles). A compartment that holds neither tag leaves the default manju mode untouched.
 		private void InitInputModeFromCompartment ()
 		{
 			try
 			{
 				if (this.Mgr_Thread is not NativeMethods.ITfCompartmentMgr compMgr) return;
-				Guid g = NativeMethods.GUID_COMPARTMENT_KEYBOARD_INPUTMODE_CONVERSION;
+				Guid g = GUID_COMPARTMENT_MANJU_INPUTMODE;
 				int hr = compMgr.GetCompartment (in g, out NativeMethods.ITfCompartment comp);
 				if (hr != NativeMethods.S_OK || comp == null) return;
 				int hrv = comp.GetValue (out VARIANT v);
-				if (hrv == NativeMethods.S_OK && v.vt == NativeMethods.VT_I4)
-					_englishMode = (v.lVal == NativeMethods.TF_CONVERSIONMODE_ALPHANUMERIC);
+				if (hrv == NativeMethods.S_OK && v.vt == NativeMethods.VT_I4 && (v.lVal == InputModeTagLatin || v.lVal == InputModeTagManchu))
+					_englishMode = v.lVal == InputModeTagLatin;
 			}
 			catch (Exception) { }
 		}

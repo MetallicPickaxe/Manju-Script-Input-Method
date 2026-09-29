@@ -1,7 +1,7 @@
 # Romanization: HU 1994 (code point -> Latin). Pure ASCII (no diacritics, no apostrophes).
 # Greedy longest-match; UNQUOTED U+XXXX keys; FVS -> "". Selectable display scheme (display.scheme: hu).
 map:
-  # digraphs (empty-rime syllables) — matched first
+  # digraphs (empty-rime syllables), matched first
   U+186F+U+1873+U+180C: "z"
   U+186E+U+185F: "cy"
   U+1830+U+185F: "sy"

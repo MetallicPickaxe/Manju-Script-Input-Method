@@ -1,7 +1,7 @@
-# Input scheme: REFINED ROMANISATION (default; id "refined"). ASCII spellings with a few aliases.
+# Input scheme: REFINED ROMANISATION (id "refined"). ASCII spellings with a few aliases.
 # token -> codepoint ONLY. Transliteration-free: the on-screen
 # romanization is the input token AS TYPED (identity, engine-level), and dictionary lookup
-# transliterates the COMPOSED CODEPOINTS to the dictionary's own index form — so this file
+# transliterates the COMPOSED CODEPOINTS to the dictionary’s own index form, so this file
 # carries NO romanization mapping. Greedy longest-match 4->1; "'" is the syllable separator.
 mappings:
   a: "ᠠ"
@@ -66,7 +66,7 @@ mappings:
 # Absent (as below) => every token shows AS TYPED (identity), which is the default. This is the
 # display layer ONLY: it changes what the preview Latin column prints for a token; it does NOT
 # affect the composed codepoints or dictionary lookup (the dictionary transliterates codepoints
-# itself). Uncomment + edit to customise. Example — show Möllendorff diacritics on screen:
+# itself). Uncomment + edit to customise. Example: show Möllendorff diacritics on screen:
 # display:
 #   v: "ū"
 #   sh: "š"

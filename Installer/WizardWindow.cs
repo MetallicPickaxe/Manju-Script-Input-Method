@@ -162,7 +162,8 @@ namespace ManjuInstaller
             _subtitle = Child("STATIC", "", WS_VISIBLE | SS_LEFT | SS_NOPREFIX, IdSubtitle);
             _body = Child("STATIC", "", SS_LEFT | SS_NOPREFIX | SS_EDITCONTROL, IdBody);
             _label = Child("STATIC", "", SS_LEFT, IdLabel);
-            _combo = Child("COMBOBOX", "", CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP, IdLanguage);
+            // Owner-drawn, so that a language without a language identifier of its own shows in gray.
+            _combo = Child("COMBOBOX", "", CBS_DROPDOWNLIST | CBS_OWNERDRAWFIXED | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP, IdLanguage);
             _edit = Child("EDIT", InstallPlan.DeliveryRoot, ES_AUTOHSCROLL | WS_TABSTOP, IdFolder, WS_EX_CLIENTEDGE);
             _browse = Child("BUTTON", "B&rowse…", BS_PUSHBUTTON | WS_TABSTOP, IdBrowse);
             _error = Child("STATIC", "", SS_LEFT | SS_NOPREFIX | SS_EDITCONTROL, IdError);
@@ -190,7 +191,7 @@ namespace ManjuInstaller
 
             if (!_setup.Uninstaller)
             {
-                SendMessageW(_combo, CB_ADDSTRING, IntPtr.Zero, "Reading the language list…");
+                SendMessageW(_combo, CB_ADDSTRING, IntPtr.Zero, ReadingLanguages);
                 SendMessageW(_combo, CB_SETCURSEL, IntPtr.Zero, IntPtr.Zero);
                 StartReadingLanguages();
             }
@@ -210,6 +211,42 @@ namespace ManjuInstaller
                 DispatchMessageW(ref m);
             }
             return _exitCode;
+        }
+
+        private const string ReadingLanguages = "Reading the language list…";
+
+        private int IndexOfLanguage(InstalledLanguage? language)
+        {
+            if (language == null || _languages == null) return -1;
+            for (int i = 0; i < _languages.Count; i++) if (ReferenceEquals(_languages[i], language)) return i;
+            return -1;
+        }
+
+        /// <summary>One item of the language list, or the selection field: a language that is not supported in
+        /// gray and never highlighted, in the system colors, so a high-contrast theme shows it too.</summary>
+        private void DrawLanguageItem(DRAWITEMSTRUCT d)
+        {
+            int index = unchecked((int)d.itemID);
+            string text = "";
+            bool supported = true;
+            if (_languages != null && index >= 0 && index < _languages.Count)
+            {
+                text = LanguageList.ShownName(_languages[index]);
+                supported = _languages[index].Supported;
+            }
+            else if (_languages == null && index == 0) text = ReadingLanguages;
+            bool disabled = (d.itemState & ODS_DISABLED) != 0;
+            bool highlighted = (d.itemState & ODS_SELECTED) != 0 && supported && !disabled;
+            RECT rc = d.rcItem;
+            FillRect(d.hDC, ref rc, GetSysColorBrush(highlighted ? COLOR_HIGHLIGHT : COLOR_WINDOW));
+            SetBkMode(d.hDC, TRANSPARENT);
+            SetTextColor(d.hDC, GetSysColor(disabled || !supported ? COLOR_GRAYTEXT : highlighted ? COLOR_HIGHLIGHTTEXT : COLOR_WINDOWTEXT));
+            IntPtr old = SelectObject(d.hDC, _font);
+            RECT tr = rc;
+            tr.left += S(4);
+            DrawTextW(d.hDC, text, -1, ref tr, DT_SINGLELINE | DT_VCENTER | DT_NOPREFIX | DT_END_ELLIPSIS);
+            SelectObject(d.hDC, old);
+            if ((d.itemState & ODS_FOCUS) != 0 && (d.itemState & ODS_NOFOCUSRECT) == 0) DrawFocusRect(d.hDC, ref rc);
         }
 
         private IntPtr Child(string cls, string text, int style, int id, int exStyle = 0)
@@ -269,13 +306,18 @@ namespace ManjuInstaller
                 case WizardPage.Language:
                     title = "Choose a language";
                     subtitle = "Windows lists Manju IME under the language you choose.";
-                    body = _languagesError is null
-                        ? "Manju IME is added to one of the languages already in your Windows language list, "
-                          + "next to that language’s other input methods.\r\n\r\nOnly languages already on this "
-                          + "computer are listed. To use another language, add it in Windows Settings first, "
-                          + "then run Setup again."
-                        : "The Windows language list could not be read, so Setup cannot add Manju IME to a "
-                          + "language.\r\n\r\n" + _languagesError;
+                    body = _languagesError is not null
+                        ? "The Windows language list could not be read, so Setup cannot add Manju IME to a "
+                          + "language.\r\n\r\n" + _languagesError
+                        : _languages != null && _language == null
+                        ? "Manju IME can be added only to a language that has a language identifier of its own, the "
+                          + "number by which Windows tells languages apart. None of the languages in your Windows "
+                          + "language list has one.\r\n\r\nAdd another language in Windows Settings, then run Setup again."
+                        : "Manju IME is added to one of the languages already in your Windows language list, "
+                          + "next to that language’s other input methods. A language in gray has no language "
+                          + "identifier of its own, and Manju IME cannot be added to it.\r\n\r\nOnly languages already "
+                          + "on this computer are listed. To use another language, add it in Windows Settings first, "
+                          + "then run Setup again.";
                     next = "&Next >";
                     nextEnabled = _language != null;
                     break;
@@ -377,8 +419,14 @@ namespace ManjuInstaller
             {
                 if (code == CBN_SELCHANGE && _languages != null)
                 {
+                    // A language that is not supported cannot be chosen: an arrow key passes over it, the
+                    // mouse and other keys leave the selection where it was.
                     int i = (int)SendMessageW(_combo, CB_GETCURSEL, IntPtr.Zero, IntPtr.Zero);
-                    if (i >= 0 && i < _languages.Count) _language = _languages[i];
+                    int previous = IndexOfLanguage(_language);
+                    bool arrow = GetKeyState(VK_UP) < 0 || GetKeyState(VK_DOWN) < 0;
+                    int take = LanguageList.NextSelectable(_languages, previous, i, arrow);
+                    if (take != i) SendMessageW(_combo, CB_SETCURSEL, (IntPtr)take, IntPtr.Zero);
+                    _language = take >= 0 && take < _languages.Count ? _languages[take] : null;
                 }
                 return;
             }
@@ -500,11 +548,9 @@ namespace ManjuInstaller
             }
             else
             {
-                foreach (var l in _languages) SendMessageW(_combo, CB_ADDSTRING, IntPtr.Zero, l.Name);
+                foreach (var l in _languages) SendMessageW(_combo, CB_ADDSTRING, IntPtr.Zero, LanguageList.ShownName(l));
                 _language = LanguageList.DefaultOf(_languages, _setup.DisplayLanguage);
-                int index = 0;
-                for (int i = 0; i < _languages.Count; i++) if (ReferenceEquals(_languages[i], _language)) index = i;
-                SendMessageW(_combo, CB_SETCURSEL, (IntPtr)index, IntPtr.Zero);
+                SendMessageW(_combo, CB_SETCURSEL, (IntPtr)IndexOfLanguage(_language), IntPtr.Zero);
             }
             if (_page == WizardPage.Language) ShowPage(WizardPage.Language);
             else EnableWindow(_combo, _languages != null);
@@ -543,6 +589,23 @@ namespace ManjuInstaller
                     SendMessageW(_bar, PBM_SETPOS, (IntPtr)(_plan?.Count ?? 0), IntPtr.Zero);
                     ShowPage(WizardPage.Finish);
                     return IntPtr.Zero;
+
+                case WM_MEASUREITEM:
+                {
+                    var mis = Marshal.PtrToStructure<MEASUREITEMSTRUCT>(lParam);
+                    if (mis.CtlID != IdLanguage) break;
+                    mis.itemHeight = (uint)S(22);
+                    Marshal.StructureToPtr(mis, lParam, false);
+                    return (IntPtr)1;
+                }
+
+                case WM_DRAWITEM:
+                {
+                    var dis = Marshal.PtrToStructure<DRAWITEMSTRUCT>(lParam);
+                    if (dis.CtlID != IdLanguage) break;
+                    DrawLanguageItem(dis);
+                    return (IntPtr)1;
+                }
 
                 case WM_CTLCOLORSTATIC:
                     SetBkColor(wParam, GetSysColor(COLOR_WINDOW));
@@ -665,7 +728,12 @@ namespace ManjuInstaller
         private const int WS_VSCROLL = 0x00200000, WS_EX_CLIENTEDGE = 0x00000200;
         private const int SS_LEFT = 0x0, SS_NOPREFIX = 0x80, SS_EDITCONTROL = 0x2000;
         private const int BS_PUSHBUTTON = 0x0, BS_DEFPUSHBUTTON = 0x1;
-        private const int CBS_DROPDOWNLIST = 0x3, ES_AUTOHSCROLL = 0x80;
+        private const int CBS_DROPDOWNLIST = 0x3, CBS_OWNERDRAWFIXED = 0x10, CBS_HASSTRINGS = 0x200, ES_AUTOHSCROLL = 0x80;
+        private const uint WM_DRAWITEM = 0x2B, WM_MEASUREITEM = 0x2C;
+        private const uint ODS_SELECTED = 0x1, ODS_DISABLED = 0x4, ODS_FOCUS = 0x10, ODS_NOFOCUSRECT = 0x200;
+        private const int COLOR_HIGHLIGHT = 13, COLOR_HIGHLIGHTTEXT = 14, COLOR_GRAYTEXT = 17;
+        private const uint DT_VCENTER = 0x4, DT_SINGLELINE = 0x20, DT_NOPREFIX = 0x800, DT_END_ELLIPSIS = 0x8000;
+        private const int TRANSPARENT = 1, VK_UP = 0x26, VK_DOWN = 0x28;
         private const uint CB_ADDSTRING = 0x143, CB_SETCURSEL = 0x14E, CB_GETCURSEL = 0x147, CB_RESETCONTENT = 0x14B;
         private const int CBN_SELCHANGE = 1;
         private const uint PBM_SETRANGE32 = 0x406, PBM_SETPOS = 0x402, EM_SETSEL = 0xB1;
@@ -702,6 +770,18 @@ namespace ManjuInstaller
 
         [StructLayout(LayoutKind.Sequential)]
         private struct RECT { public int left, top, right, bottom; }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MEASUREITEMSTRUCT { public uint CtlType, CtlID, itemID, itemWidth, itemHeight; public UIntPtr itemData; }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct DRAWITEMSTRUCT
+        {
+            public uint CtlType, CtlID, itemID, itemAction, itemState;
+            public IntPtr hwndItem, hDC;
+            public RECT rcItem;
+            public UIntPtr itemData;
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         private struct PAINTSTRUCT
@@ -751,6 +831,11 @@ namespace ManjuInstaller
         [DllImport("user32.dll")] private static extern bool MessageBeep(uint type);
         [DllImport("gdi32.dll")] private static extern uint SetBkColor(IntPtr dc, uint color);
         [DllImport("gdi32.dll")] private static extern uint SetTextColor(IntPtr dc, uint color);
+        [DllImport("gdi32.dll")] private static extern int SetBkMode(IntPtr dc, int mode);
+        [DllImport("gdi32.dll")] private static extern IntPtr SelectObject(IntPtr dc, IntPtr obj);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int DrawTextW(IntPtr dc, string text, int count, ref RECT rc, uint format);
+        [DllImport("user32.dll")] private static extern int DrawFocusRect(IntPtr dc, ref RECT rc);
+        [DllImport("user32.dll")] private static extern short GetKeyState(int key);
         [DllImport("gdi32.dll")] private static extern bool DeleteObject(IntPtr h);
         [DllImport("gdi32.dll")] private static extern IntPtr CreateFontW(int h, int w, int esc, int ori, int weight, uint italic, uint underline, uint strike, uint charset, uint outPrec, uint clipPrec, uint quality, uint pitch, [MarshalAs(UnmanagedType.LPWStr)] string face);
         [DllImport("kernel32.dll")] private static extern IntPtr GetModuleHandleW(IntPtr name);

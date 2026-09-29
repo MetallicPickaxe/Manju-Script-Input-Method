@@ -12,7 +12,10 @@ namespace ManjuInstaller
     /// <param name="LangId">Its LANGID as four hex digits, the number the input method is registered
     /// under.</param>
     /// <param name="Name">Its name in the Windows display language, as Settings shows it.</param>
-    public sealed record InstalledLanguage(string Tag, string LangId, string Name);
+    /// <param name="Supported">False for a language without a language identifier of its own (see
+    /// <see cref="LanguageList.IsTransient"/>): the language page shows it in gray, and nothing registers
+    /// under it.</param>
+    public sealed record InstalledLanguage(string Tag, string LangId, string Name, bool Supported = true);
 
     /// <summary>
     /// THE LANGUAGE LIST, THROUGH THE SAME CMDLETS THE SCRIPT USES.
@@ -126,8 +129,9 @@ foreach ($lang in $list) {
         }
 
         /// <summary>
-        /// The lines <see cref="ListScript"/> prints, as languages. A line without a four-digit
-        /// LANGID is left out, and so is a transient LANGID (see <see cref="IsTransient"/>).
+        /// The lines <see cref="ListScript"/> prints, as languages, in the list's order. A line without a
+        /// four-digit LANGID is left out; a language without a language identifier of its own (see
+        /// <see cref="IsTransient"/>) stays in the list, not supported.
         /// </summary>
         public static List<InstalledLanguage> Parse(string output)
         {
@@ -138,29 +142,57 @@ foreach ($lang in $list) {
                 if (f.Length < 3) continue;
                 string tag = f[0].Trim(), id = f[1].Trim().ToUpperInvariant(), name = f[2].Trim();
                 if (tag.Length == 0 || id.Length != 4 || !id.All(Uri.IsHexDigit)) continue;
-                if (IsTransient(id)) continue;
-                list.Add(new InstalledLanguage(tag, id, name.Length > 0 ? name : tag));
+                list.Add(new InstalledLanguage(tag, id, name.Length > 0 ? name : tag, !IsTransient(id)));
             }
             return list;
         }
 
         /// <summary>
-        /// The four LANGIDs Windows assigns per user to languages that have no locale ID of their own
-        /// (LOCALE_TRANSIENT_KEYBOARD1 to 4). The language one of them stands for can change when the
-        /// list changes, so an input method registered under it could end up under another language, or
-        /// under none. They are not offered.
+        /// The LANGIDs of a language that has no language identifier of its own, from [MS-LCID] 2.2.1,
+        /// "Locale Names without LCIDs": the transient ones Windows assigns per user (0x2000 to 0x4C00, in
+        /// steps of 0x400), LOCALE_CUSTOM_DEFAULT (0x0C00) and LOCALE_CUSTOM_UNSPECIFIED (0x1000). The
+        /// language a transient one stands for can change when the list changes, and Windows does not
+        /// keep an input method under such a language. The language page shows them in gray, and neither
+        /// setup nor the script registers under one.
         /// </summary>
         public static bool IsTransient(string langId) =>
-            langId.ToUpperInvariant() is "2000" or "2400" or "2800" or "2C00";
+            langId.ToUpperInvariant() is "2000" or "2400" or "2800" or "2C00" or "3000" or "3400" or "3800"
+                or "3C00" or "4000" or "4400" or "4800" or "4C00" or "0C00" or "1000";
+
+        /// <summary>The name the language page shows: a language that is not supported is marked.</summary>
+        public static string ShownName(InstalledLanguage language) =>
+            language.Supported ? language.Name : language.Name + " (Not supported)";
 
         /// <summary>
-        /// The language setup preselects: the Windows display language when it is in the list,
-        /// otherwise the first language of the list. Null for an empty list.
+        /// The item the language page selects when the user moves the selection from
+        /// <paramref name="previous"/> to <paramref name="wanted"/>. A supported language is taken. An
+        /// unsupported one is passed over: with an arrow key the selection goes on in the same direction to
+        /// the next supported language, and it stays where it was when there is none that way; with the
+        /// mouse, or any other key, it stays where it was.
+        /// </summary>
+        public static int NextSelectable(IReadOnlyList<InstalledLanguage> list, int previous, int wanted, bool arrowKey)
+        {
+            if (wanted < 0 || wanted >= list.Count) return previous;
+            if (list[wanted].Supported) return wanted;
+            if (arrowKey && wanted != previous)
+            {
+                int step = wanted > previous ? 1 : -1;
+                for (int i = wanted; i >= 0 && i < list.Count; i += step)
+                    if (list[i].Supported) return i;
+            }
+            return previous;
+        }
+
+        /// <summary>
+        /// The language setup preselects: the Windows display language when it is in the list and
+        /// supported, otherwise the first supported language of the list. Null when the list has no
+        /// supported language.
         /// </summary>
         public static InstalledLanguage? DefaultOf(IReadOnlyList<InstalledLanguage> list, ushort displayLanguage)
         {
-            if (list.Count == 0) return null;
-            return list.FirstOrDefault(l => Convert.ToUInt16(l.LangId, 16) == displayLanguage) ?? list[0];
+            var supported = list.Where(l => l.Supported).ToList();
+            if (supported.Count == 0) return null;
+            return supported.FirstOrDefault(l => Convert.ToUInt16(l.LangId, 16) == displayLanguage) ?? supported[0];
         }
 
         /// <summary>
@@ -171,13 +203,13 @@ foreach ($lang in $list) {
         public static InstalledLanguage Choose(IReadOnlyList<InstalledLanguage> list, string? requested,
                                                ushort displayLanguage, out string why)
         {
-            if (list.Count == 0)
+            if (!list.Any(l => l.Supported))
                 throw new InvalidOperationException(
                     "The Windows language list of this user has no language an input method can be added to.");
             if (!string.IsNullOrWhiteSpace(requested))
             {
                 string id = requested.Trim().ToUpperInvariant();
-                var hit = list.FirstOrDefault(l => l.LangId == id)
+                var hit = list.FirstOrDefault(l => l.LangId == id && l.Supported)
                           ?? throw new InvalidOperationException(IsTransient(id) ? TransientRefused(id, list) : NotInList(id, list));
                 why = "requested";
                 return hit;
@@ -185,7 +217,7 @@ foreach ($lang in $list) {
             var chosen = DefaultOf(list, displayLanguage)!;
             why = Convert.ToUInt16(chosen.LangId, 16) == displayLanguage
                 ? $"the Windows display language (0x{displayLanguage:X4})"
-                : $"the first language of the list (the Windows display language 0x{displayLanguage:X4} is not in it)";
+                : $"the first supported language of the list (the Windows display language 0x{displayLanguage:X4} is not a supported one in it)";
             return chosen;
         }
 
@@ -194,14 +226,14 @@ foreach ($lang in $list) {
             $"LANGID {langId} is not in the Windows language list of this user, and setup does not add languages "
             + "to Windows. Add the language in Windows Settings first, or choose one of: " + Offered(list) + ".";
 
-        /// <summary>The error for a transient LANGID.</summary>
+        /// <summary>The error for the LANGID of a language without one of its own.</summary>
         public static string TransientRefused(string langId, IReadOnlyList<InstalledLanguage> list) =>
-            $"LANGID {langId} is a transient LANGID. Windows assigns it per user to a language that has no "
-            + "locale ID, and the language it stands for can change when the list changes, so setup does not "
-            + "register under it. Choose one of: " + Offered(list) + ".";
+            $"LANGID {langId} belongs to a language that has no language identifier of its own. Windows gives "
+            + "such a language a temporary identifier and does not keep an input method under it, so setup does "
+            + "not register under it. Choose one of: " + Offered(list) + ".";
 
         private static string Offered(IReadOnlyList<InstalledLanguage> list) =>
-            string.Join(", ", list.Select(l => $"{l.LangId} {l.Tag}"));
+            string.Join(", ", list.Where(l => l.Supported).Select(l => $"{l.LangId} {l.Tag}"));
 
         // ------------------------------------------------------------------ changing the list
 

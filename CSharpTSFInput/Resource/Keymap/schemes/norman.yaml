@@ -1,6 +1,6 @@
 # Input scheme: NORMAN 2013. Canonical letters as input tokens (precomposed ū/š/ž; ASCII ' for
-# loan velars — input compatibility). token -> codepoint ONLY. Greedy longest-match 4->1.
-# NOTE: Norman writes ᡮ and ᡮᡟ both "ts", and ᡯ and ᡯᡳ᠌ both "dz" — the empty-rime members are
+# loan velars, for input compatibility). token -> codepoint ONLY. Greedy longest-match 4->1.
+# NOTE: Norman writes ᡮ and ᡮᡟ both "ts", and ᡯ and ᡯᡳ᠌ both "dz"; the empty-rime members are
 # homographic and not separately inputtable here (use the refined/abkai scheme if you need them).
 mappings:
   a: "ᠠ"

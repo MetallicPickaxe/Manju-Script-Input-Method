@@ -8,7 +8,7 @@ param()
 $ErrorActionPreference = "Stop"
 
 # ── WHICH COPY IS INSTALLED ─────────────────────────────────────────────────────
-# The DLL Windows has registered as this input method's COM server, or $null when none is. That copy
+# The DLL Windows has registered as this input method’s COM server, or $null when none is. That copy
 # is the one removed, wherever it is: setup can install a copy into another folder.
 function Get-ManjuRegisteredDll {
     param([string]$Clsid)
@@ -21,7 +21,7 @@ function Get-ManjuRegisteredDll {
 
 # ── WHICH WINDOWS LANGUAGE THIS INPUT METHOD IS REGISTERED UNDER ─────────────────
 # Setup writes it into the settings file beside the DLL it registers (install.language_identifier), so it is read
-# from there: the registered DLL's settings file first, then the ones this script can reach.
+# from there: the registered DLL’s settings file first, then the ones this script can reach.
 # A missing or unreadable setting falls back to the built-in default AND SAYS SO, never silently.
 # The language the registration itself carries: the first subkey of
 # CTF\TIP\{CLSID}\LanguageProfile (0x00000c09 is 0C09). $null when there is no registration.
@@ -39,11 +39,11 @@ function Resolve-ManjuLangId {
     param([string]$RegisteredDll, [string]$Clsid)
     $fallback = '0804'
     $pattern = '(?m)^\s*language_identifier\s*:\s*"?([0-9A-Fa-f]{4})"?\s*(?:#.*)?$'
-    #   0. beside the registered DLL, and when that copy's settings name no language (its folder was
+    #   0. beside the registered DLL, and when that copy’s settings name no language (its folder was
     #      deleted after the install, say) the registration itself: a fallback here would leave the
     #      language-list entry of a copy registered under another language
-    #   1. beside me            — a flat delivery
-    #   2. ..\Runtime           — the ONE shared payload of a three-directory delivery
+    #   1. beside me:           a flat delivery
+    #   2. ..\Runtime:          the ONE shared payload of a three-directory delivery
     if ($RegisteredDll) {
         $own = Join-Path (Split-Path $RegisteredDll -Parent) 'Resource\Configuration\configuration.yaml'
         if (Test-Path -LiteralPath $own) {
@@ -271,7 +271,7 @@ if (Test-Path $HkcuPath) {
     Remove-Item -Path $HkcuPath -Recurse -Force -ErrorAction SilentlyContinue
     Write-Host "    Deleted: $HkcuPath" -ForegroundColor Yellow
 }
-# Clear this input method's entry under whichever language of the User Profile still holds it
+# Clear this input method’s entry under whichever language of the User Profile still holds it
 $UserProfilePath = "HKCU:\Control Panel\International\User Profile"
 if (Test-Path $UserProfilePath) {
     foreach ($languageKey in (Get-ChildItem -LiteralPath $UserProfilePath -ErrorAction SilentlyContinue)) {
@@ -314,7 +314,7 @@ public class ShellNotify {
 } catch { }
 
 # Restart ctfmon to force a TSF cache refresh.
-# Only the ctfmon of this script's own session: Get-Process lists the ctfmon of every signed-in
+# Only the ctfmon of this script’s own session: Get-Process lists the ctfmon of every signed-in
 # user, and the others are left alone.
 Write-Host ">>> Restarting ctfmon in this session to refresh the cache..."
 $Session = (Get-Process -Id $PID).SessionId

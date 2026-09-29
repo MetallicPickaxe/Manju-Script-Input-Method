@@ -2,7 +2,7 @@
 # Source: Wikipedia "Transliterations of Manchu" BabelPad column. Greedy longest-match; UNQUOTED
 # U+XXXX keys; FVS -> "". Selectable as a display scheme (display.scheme: babelpad).
 map:
-  # digraphs (empty-rime syllables) — matched first
+  # digraphs (empty-rime syllables), matched first
   U+186F+U+1873+U+180C: "dz"
   U+186E+U+185F: "tsy"
   U+1830+U+185F: "sy"
