@@ -173,11 +173,14 @@ shortcut.
   type: the letters of a word are held in memory while you type it.
 - It creates windows of its own, such as the candidate window, and one thread of its own in each program
   it is loaded into.
-- In Microsoft Edge, Google Chrome and the other programs built on Chromium, the first time you type a word
-  there it sets two Windows message hooks on that program’s window thread, removed when the input method
-  is switched off in that program. When one of these programs ends a word itself, it leaves a dot, the
-  placeholder of the word, in the document. With the hooks the input method ends the word first: when a
-  mouse button goes down in the program, it puts the word in as you typed it, and on Alt+Tab it drops the
+- In Microsoft Edge, Google Chrome and the other programs built on Chromium, and in programs that show web
+  pages with Microsoft Edge WebView2, the first time you type a word there it sets two Windows message
+  hooks on that program’s window thread, removed when the input method is switched off in that program.
+  When one of these programs ends a word itself, it leaves a dot, the placeholder of the word, in the
+  document. So the input method ends the word first and puts it in as you typed it: before it passes the
+  program a key, other than Shift, Ctrl, Alt or Win alone and Caps Lock, Num Lock and Scroll Lock; and,
+  with the hooks, when a mouse button goes down in the program, when Alt is pressed with another key such
+  as D, and when another window of the same program becomes active. On Alt+Tab and Alt+Esc it drops the
   word, as when you switch away.
 
 ### Uninstalling
@@ -211,8 +214,8 @@ it found, and goes on either way.
   SmartScreen, the part of Windows that checks programs downloaded from the internet: [Installing Manju
   IME](installation.md#windows-protected-your-pc) says how to go on.
 - Smart App Control, turned on and off in the settings of the Windows Security app, blocks a program that
-  is not signed, and Microsoft says: “There is currently no way to bypass Smart App Control protection for
-  individual apps.” While it is on, the setup programs cannot run.
+  is not signed, and Microsoft says that at present no single program can be let through. While it is
+  on, the setup programs cannot run.
 
 ### The settings file
 

@@ -27,7 +27,7 @@ lists every change they make.
    folder to run Manju IME from. By default that is the folder Manju IME is in now; for another
    folder, Setup copies Manju IME there.
 
-   ![The language page of Setup](images/setup-2-language.png)
+   ![The language page of Setup with its list open: English (United States) is chosen, and Anglo-Saxon and Esperanto are in gray, marked Not supported](images/setup-2-language.png)
 
    ![The folder page of Setup](images/setup-3-location.png)
 
@@ -44,11 +44,10 @@ Manju IME is not code-signed, so when you run the downloaded `Install Manju IME.
 **Windows protected your PC**. Click **More info**, then **Run anyway**.
 
 Smart App Control, which you turn on and off in the settings of the Windows Security app, does not offer
-that choice. Microsoft’s answers about it say: “If the app is unsigned, or the signature is invalid, Smart
-App Control will consider it untrusted and block it for your protection,” and “There is currently no way to
-bypass Smart App Control protection for individual apps.” While it is on, Setup cannot run. The same page
-says that recent Windows updates allow Smart App Control to be turned on again without a clean
-installation of Windows.
+that choice. Microsoft’s answers about it say that it takes a program with no signature, or with a
+signature that is not valid, as untrusted and blocks it, and that at present no single program can be
+let through. While it is on, Setup cannot run. The same page says that recent Windows updates allow
+Smart App Control to be turned on again without a clean installation of Windows.
 [What Manju IME does to a computer](deployment.md#what-manju-ime-does-to-a-computer) says what the
 programs do before you run them.
 

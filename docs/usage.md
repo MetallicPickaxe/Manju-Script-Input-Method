@@ -79,6 +79,7 @@ they would without an IME.
 | **Left**, **Right** | Moves the highlight to the card before or after; this does not pick the card. | Goes to the program. |
 | **Page Up**, **Page Down** | When the word has more letters than the window shows, shows the rows before or after, and highlights the first letter shown. | Goes to the program. |
 | **Tab** | Goes to the program. Microsoft Edge, Google Chrome and the other programs built on Chromium end the word when they get it, so Manju IME first puts the word into the document as you typed it: see [Leaving a word](#leaving-a-word). In other programs, such as Notepad, the word stays open. | Goes to the program. |
+| **Ctrl**, **Alt** or **Win** with another key, and **F1** to **F12** | Go to the program. In Microsoft Edge, Google Chrome and the other programs built on Chromium, Manju IME first puts the word into the document as you typed it, as it does for **Tab**; a key that takes you to another program, such as **Alt+Tab** or **Win+D**, drops the word: see [Leaving a word](#leaving-a-word). | Go to the program. |
 | **Shift**, tapped | Adds the mark or the apostrophe to the letter before it: see [Tap Shift in the middle of a word](#tap-shift-in-the-middle-of-a-word). | Switches between Latin and Manchu input: see [Switch between Latin and Manchu](#switch-between-latin-and-manchu). |
 | `'` | Separates two letters, or, pressed a second time, puts the letters typed into the document as they are, followed by an apostrophe: see [The apostrophe key](#the-apostrophe-key). | Types an apostrophe. |
 | `-` | Inserts the Mongolian vowel separator: see [Suffixes](#suffixes). | Types a hyphen. |
@@ -91,12 +92,9 @@ they would without an IME.
 
 When you switch to another program with **Alt+Tab** in the middle of a word, Manju IME drops the word, as
 **Esc** does, and nothing goes into the document. When the program you type in ends the word itself, for
-example when Microsoft Edge moves to another field on **Tab** or on a click, the word goes into the
-document as you typed it: the letters you picked in their Manchu form, the others in Latin letters.
-
-In Microsoft Edge and the other programs built on Chromium, a click on another program’s window in the
-middle of a word sometimes puts the word into the document as you typed it, and sometimes drops it. Press
-**Space**, **Enter** or **Esc** to end the word before you click away.
+example when Microsoft Edge moves to another field on **Tab**, on a click or on a key such as **Ctrl+L**
+or **F6**, or when you click another window of Edge, the word goes into the document as you typed it:
+the letters you picked in their Manchu form, the others in Latin letters.
 
 ### Pick a form with the number keys
 
