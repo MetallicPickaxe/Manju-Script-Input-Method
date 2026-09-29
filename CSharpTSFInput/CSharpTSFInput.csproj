@@ -1,0 +1,104 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net11.0-windows10.0.26100.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<RootNamespace>CSharpTSFInput</RootNamespace>
+		<!-- Pin a single RID; AOT requires it -->
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<!-- Windows 11 21H2 (build 22000), the first Windows 11. No call in this project needs a later one. -->
+		<SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
+		<PlatformTarget>x64</PlatformTarget>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+
+		<!-- THE VERSION RESOURCE. This is a COM server that registers itself into HKLM and is not
+		     Authenticode-signed; the properties page is one of the few things a user can check before
+		     trusting it, and a blank one reads worse than an honest one, so all four fields are filled
+		     in.
+		     The names: `Manju IME` is `Globals.Desc_TextService`, the identity string this product is
+		     known by, and `Pickaxe` is the copyright holder.
+		     -->
+		<Version>1.0.0</Version>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<Product>Manju IME</Product>
+		<Company>Pickaxe</Company>
+		<Copyright>Copyright (c) 2026 Pickaxe</Copyright>
+		<Description>Manchu script input method (TSF text service)</Description>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+		
+		<!-- AOT settings -->
+		<PublishAot>true</PublishAot>
+		<!-- NO DEBUG DATA IN A SHIPPED BINARY.
+		     Patching the bytes afterwards does not help: the compiler writes it every build. -->
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+		<NativeLib>Shared</NativeLib>
+		<StaticallyLinkedVCRuntimePackage>true</StaticallyLinkedVCRuntimePackage>
+		<SelfContained>true</SelfContained>
+		
+		<!-- Optimisation settings -->
+		<OptimizationPreference>Size</OptimizationPreference>
+		<StackTraceSupport>false</StackTraceSupport>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<Platforms>AnyCPU;x64</Platforms>
+
+		<!-- Win32 icon resources (branding=ID 1=index 0, manju=2, en=3) so the
+		     system-tray Input Indicator can load the IME branding icon by resource index
+		     (RegisterProfile Globals.Index_Icon=0) and surface the input-mode icon. Prebuilt via
+		     rc.exe (app.rc -> app.res). -->
+		<Win32Resource>app.res</Win32Resource>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- The single Resource\ tree, with Configuration, Dictionary, Font, Keymap and
+		     Romanization sub-trees. -->
+		<None Update="Resource\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Resource\Dictionary\**\*">
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Tray input-mode icons embedded as manifest resources (AOT-friendly:
+		     read at runtime via GetManifestResourceStream + CreateIconFromResourceEx, so no rc.exe
+		     / Win32Resource step). LogicalName = the bare file name used by IconLoader. -->
+		<EmbeddedResource Include="Icons\manju.ico">
+			<LogicalName>manju.ico</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Icons\en.ico">
+			<LogicalName>en.ico</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Shared Manchu vertical rendering library. -->
+		<ProjectReference Include="..\CSharpTSFInput.Rendering.MongolianVertical\CSharpTSFInput.Rendering.MongolianVertical.csproj" />
+		<!-- Shared engine-agnostic Core (super-layer). Manju consumes it (no copy /
+		     no dead-code duplicate). AOT-compiled into the Manju native DLL like the rendering lib. -->
+		<ProjectReference Include="..\CSharpTSFInput.Core\CSharpTSFInput.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<DirectPInvoke Include="d2d1" />
+		<DirectPInvoke Include="dwrite" />
+		<LinkerArg Include="/DEBUG:NONE" />
+		<!-- /Brepro: the PE TimeDateStamp becomes a hash of the output, not the wall clock.
+		     -->
+		<LinkerArg Include="/Brepro" />
+		<LinkerArg Include="d2d1.lib" />
+		<LinkerArg Include="dwrite.lib" />
+        <!-- Force clean exports for COM -->
+        <LinkerArg Include="/EXPORT:DllGetClassObject" />
+        <LinkerArg Include="/EXPORT:DllCanUnloadNow" />
+        <LinkerArg Include="/EXPORT:DllRegisterServer" />
+        <LinkerArg Include="/EXPORT:DllUnregisterServer" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7175" />
+	</ItemGroup>
+
+</Project>

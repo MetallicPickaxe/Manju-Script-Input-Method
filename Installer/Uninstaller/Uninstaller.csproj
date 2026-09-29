@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- `Uninstall Manju IME.exe`. It compiles the installer's source files together with its own
+       entry point, UninstallerEntry. It is a project of its own because a program's name and its
+       version resource come from its project, and the name in the version resource is the one
+       Windows shows on the elevation prompt. The settings both programs share are in
+       Installer.props. -->
+  <Import Project="..\Installer.props" />
+
+  <PropertyGroup>
+    <AssemblyName>Uninstall Manju IME</AssemblyName>
+    <Description>Uninstaller for the Manju IME text service</Description>
+    <StartupObject>ManjuInstaller.UninstallerEntry</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- InstallOutcome.cs, compiled here too, reads the settings menu constant. -->
+    <Compile Include="..\..\CSharpTSFInput\Exposure.cs" Link="Exposure.cs" />
+  </ItemGroup>
+</Project>

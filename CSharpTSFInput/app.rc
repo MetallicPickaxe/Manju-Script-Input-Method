@@ -1,0 +1,62 @@
+// Win32 resources embedded in the TIP DLL.
+//
+// ICONS. The system-tray Input Indicator loads the IME *branding* icon from the DLL by the
+// resource index registered via ITfInputProcessorProfileMgr::RegisterProfile
+// (Globals.Index_Icon = 0 = the first/lowest-ID icon = branding). Without a Win32 icon
+// resource here the indicator finds nothing and shows the language abbreviation instead,
+// and never queries the GUID_LBI_INPUTMODE mode icon (the host calls GetInfo but
+// never GetIcon). manju/en are the mode icons (loaded by GetIcon via LoadImage).
+1 ICON "Icons\\branding.ico"
+2 ICON "Icons\\manju.ico"
+3 ICON "Icons\\en.ico"
+
+// VERSIONINFO. This is a COM server that registers itself into HKLM and is not Authenticode-signed;
+// the properties page is one of the few things a user can inspect before trusting it, so all four
+// version fields are filled in here.
+//
+// IT HAS TO BE HERE, NOT IN THE .csproj. `<Win32Resource>app.res</Win32Resource>` REPLACES the
+// version resource MSBuild would otherwise generate from <Company> / <Product> / <FileVersion>, so
+// those properties are silently inert for this project. Dropping <Win32Resource> is not the way to
+// re-enable them: the icons above must be Win32 ICON resources or the tray indicator has nothing
+// to load.
+//
+// The names: `Manju IME` is Globals.Desc_TextService, and `Pickaxe` is the copyright holder
+//
+// The versions: the ProductVersion string has three parts, 1.0.0, the version the two setup programs,
+// the release tag and the release zip give; the FileVersion string and the numeric FILEVERSION and
+// PRODUCTVERSION fields keep the four parts a Windows version resource has, 1.0.0.0.
+//
+// `app.res` is PREBUILT and checked in, and no build step regenerates it. After editing this file,
+// recompile it, or the DLL keeps the old resource and nothing says so:
+//     rc.exe /nologo /fo app.res app.rc
+// (rc.exe ships with the Windows SDK; this tree also has it under the
+// Microsoft.Windows.SDK.BuildTools package it already references.)
+
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+FILEFLAGSMASK   0x3fL
+FILEFLAGS       0x0L
+FILEOS          0x40004L
+FILETYPE        0x2L
+FILESUBTYPE     0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName",      "Pickaxe"
+            VALUE "FileDescription",  "Manchu script input method (TSF text service)"
+            VALUE "FileVersion",      "1.0.0.0"
+            VALUE "InternalName",     "CSharpTSFInput.dll"
+            VALUE "LegalCopyright",   "Copyright (c) 2026 Pickaxe"
+            VALUE "OriginalFilename", "CSharpTSFInput.dll"
+            VALUE "ProductName",      "Manju IME"
+            VALUE "ProductVersion",   "1.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "CSharpTSFInput": {
+      "commandName": "Project"
+    },
+    "Run Input": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Windows\\System32\\notepad.exe",
+      "nativeDebugging": true
+    }
+  }
+}

@@ -1,0 +1,20 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="CSharpTSFInput/CSharpTSFInput.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <!-- Shared Manchu vertical rendering library. -->
+  <Project Path="CSharpTSFInput.Rendering.MongolianVertical/CSharpTSFInput.Rendering.MongolianVertical.csproj" />
+  <!-- Shared engine-agnostic Core (super-layer).
+       Manju consumes it (ConfigurationStore reads YAML through Core.MiniYamlReader and keeps no
+       local copy of the reader). -->
+  <Project Path="CSharpTSFInput.Core/CSharpTSFInput.Core.csproj" />
+  <!-- The installer: one self-contained NativeAOT exe, same toolchain as the product.
+       No WiX / NSIS / MSI and no NuGet package: NativeAOT is how this repository ships native binaries. -->
+  <Project Path="Installer/Installer.csproj" />
+  <!-- The uninstaller: the installer's sources with a second entry point, built as its own exe. -->
+  <Project Path="Installer/Uninstaller/Uninstaller.csproj" />
+</Solution>

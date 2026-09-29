@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- `Install Manju IME.exe`. The settings both programs share are in Installer.props. -->
+  <Import Project="Installer.props" />
+
+  <PropertyGroup>
+    <AssemblyName>Install Manju IME</AssemblyName>
+    <Description>Installer for the Manju IME text service</Description>
+    <!-- Uninstaller\ holds the second program's project, which compiles these same files with
+         its own entry point. Its sources and build output are not part of this project. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);Uninstaller\**</DefaultItemExcludes>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- The one constant that says whether the settings menu is exposed. -->
+    <Compile Include="..\CSharpTSFInput\Exposure.cs" Link="Exposure.cs" />
+  </ItemGroup>
+</Project>

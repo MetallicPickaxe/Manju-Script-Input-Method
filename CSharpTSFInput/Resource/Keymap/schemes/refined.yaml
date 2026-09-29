@@ -1,0 +1,74 @@
+# Input scheme: REFINED ROMANISATION (default; id "refined"). ASCII spellings with a few aliases.
+# token -> codepoint ONLY. Transliteration-free: the on-screen
+# romanization is the input token AS TYPED (identity, engine-level), and dictionary lookup
+# transliterates the COMPOSED CODEPOINTS to the dictionary's own index form — so this file
+# carries NO romanization mapping. Greedy longest-match 4->1; "'" is the syllable separator.
+mappings:
+  a: "ᠠ"
+  e: "ᡝ"
+  i: "ᡳ"
+  o: "ᠣ"
+  u: "ᡠ"
+  v: "ᡡ"   # the only spelling for ū is `v`.
+  n: "ᠨ"
+  b: "ᠪ"
+  p: "ᡦ"
+  s: "ᠰ"
+  k: "ᡴ"
+  g: "ᡤ"
+  h: "ᡥ"
+  l: "ᠯ"
+  m: "ᠮ"
+  j: "ᠵ"
+  dzh: "ᠵ"
+  y: "ᠶ"
+  r: "ᡵ"
+  f: "ᡶ"
+  w: "ᠸ"
+  t: "ᡨ"
+  d: "ᡩ"
+  # č is typed ch/tsh; a bare `q` is not a token.
+  ng: "ᠩ"
+  sh: "ᡧ"
+  # š is typed sh; a bare `x` is not a token.
+  ch: "ᠴ"
+  tsh: "ᠴ"
+  zh: "ᡰ"
+  rh: "ᡰ"
+  r': "ᡰ"
+  ts: "ᡮ"
+  tsy: "ᡮᡟ"
+  chy: "ᡱᡳ"
+  # the empty-rime či is typed chy/tshy; there is no `qy`.
+  tshy: "ᡱᡳ"
+  dz: "ᡯ"
+  dzy: "ᡯᡳ᠌"
+  sy: "ᠰᡟ"
+  jy: "ᡷᡳ"
+  dzhy: "ᡷᡳ"
+  # The empty-rime vowel is keyed by the initial: ᡮ/ᠰ (ci/si) = ᡟ U+185F (SIBE IY); ᡯ/ᡱ/ᡷ/ᡧ/ᡰ (zi/chi/zhi/shi/ri) = ᡳ U+1873 (MANCHU I).
+  shy: "ᡧᡳ"
+  # the empty-rime ši is typed shy; there is no `xy`.
+  zhy: "ᡰᡳ"
+  rhy: "ᡰᡳ"
+  r'y: "ᡰᡳ"
+  # For a loanword the velar is written with the apostrophe adapter only (k'/g'/h', right Shift).
+  k': "ᠺ"
+  g': "ᡬ"
+  h': "ᡭ"
+  # Suffix connector '-' and '--' are not scheme tokens: they are handled at
+  # the KEYSTROKE level (CompositionProcessorEngine.InsertSuffixConnector), by the same logic as
+  # Shift+Space: '-' / Shift+Space -> Engine.SuffixConnectorChar (MVS U+180E default; NNBSP U+202F when the
+  # yaml `input.suffix_connector_narrow_no_break_space` or the connector codepoint row of the settings menu picks it); a second connector ('--') ->
+  # explicit MVS. Kept OUT of the scheme so the runtime toggle can govern the codepoint (a static yaml
+  # value could not be flipped at runtime).
+# OPTIONAL on-screen romanization overrides: token -> shown string.
+# Absent (as below) => every token shows AS TYPED (identity), which is the default. This is the
+# display layer ONLY: it changes what the preview Latin column prints for a token; it does NOT
+# affect the composed codepoints or dictionary lookup (the dictionary transliterates codepoints
+# itself). Uncomment + edit to customise. Example — show Möllendorff diacritics on screen:
+# display:
+#   v: "ū"
+#   sh: "š"
+#   zh: "ž"
+#   tsh: "c"

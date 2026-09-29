@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<!--
+		  Shared, engine-AGNOSTIC core library.
+
+		  Constraints:
+		    - NORMAL managed library, NOT a TSF DLL, NOT AOT-published itself; consumed by
+		      AOT-compiled hosts, so keep AOT-FRIENDLY (no reflection-heavy patterns).
+		    - ENGINE-AGNOSTIC: zero Manchu/Mongolian/Manju-specific types.
+		    - net11, the same target framework as the other projects in the solution.
+		-->
+		<TargetFramework>net11.0-windows10.0.26100.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<RootNamespace>CSharpTSFInput.Core</RootNamespace>
+		<!-- Windows 11 21H2 (build 22000), the first Windows 11. No call in this project needs a later one. -->
+		<SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
+		<Nullable>enable</Nullable>
+		<Platforms>AnyCPU;x64</Platforms>
+		<OutputType>Library</OutputType>
+		<IsAotCompatible>true</IsAotCompatible>
+		<!-- The shared TSF bootstrap/registration interop uses unsafe COM signatures (void**, Guid**). -->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+</Project>

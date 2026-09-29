@@ -1,0 +1,155 @@
+# CSharpTSFInput configuration
+#
+# Edit this file to customize font, font size, and other display preferences.
+# The IME reads this file again when it is saved: the next key pressed half a second or more
+# after the save uses the new values. font.path, font.size and knowledge_window.enabled take effect at the next
+# activation. A saved file with a value the IME cannot use is not taken; the settings stay as they were.
+#
+# Format: minimal YAML subset (mapping / scalar / nested / list / # comments).
+# This file is the user-facing configuration; there is no separate
+# system/default/user split. The built-in default is whatever ships with the
+# IME; once installed this file is the single source of truth.
+
+font:
+  # Path to the font file, relative to the IME’s install directory.
+  # Other Mongolian/Manchu fonts that work with the HarfBuzz Mongolian shaper
+  # can be substituted here. The collapse-by-glyph-id logic auto-adapts to
+  # whichever font is loaded; number of candidates per letter will vary.
+  path: "Resource/Font/NotoSansMongolian-Regular.ttf"
+
+  # Display font size in DIP (device-independent pixels).
+  # Note: the value reaches the engine, but UI layout uses a hardcoded
+  # constant, so the layout does not follow a change to this value.
+  size: 32
+
+# Romanization input scheme. Picks which token->codepoint mapping the
+# engine loads from Resource/Keymap/schemes/<scheme>.yaml. Each scheme is purely
+# token->codepoint (transliteration-free); the on-screen romanization is the input
+# token AS TYPED, and dictionary lookup transliterates the COMPOSED codepoints to the
+# dictionary’s own index form (so any scheme finds the same words).
+#   abkai:       Abkai (v/x/q, ' for loan-velars & empty-rimes: cy'/zy'/r'/sy'/qy'/jy')
+#   babelpad:    BabelPad (pure ASCII: uu/x/kh/gh/hh/c/ts/tsy/dz/z/sy/chi/zhi)
+#   hu:          Hu (pure ASCII: uu/sh/ch/zh/kk/gg/hh/c/cy/z/rr/chy/zhy …)
+#   mollendorff: canonical Möllendorff letters (ū/š/ž, k'/g'/h', ts', c'y …)
+#   norman:      Norman 2013 (ū/š/ž, k'/g'/h', ts, cy; no ts'/c'y apostrophe)
+#   refined:     Refined Romanisation: ASCII spellings with a few aliases (default)
+keymap:
+  scheme: refined
+
+# On-screen romanization. INDEPENDENT of the input scheme.
+#   abkai:        always show Abkai / Taiqing (the transliteration of abkai.net), whatever you type in
+#   babelpad:     always show BabelPad (pure ASCII), whatever you type in
+#   hu:           always show Hu (pure ASCII), whatever you type in
+#   input:        what you type is what you see: show each unit AS TYPED (mirror the input scheme; default)
+#   mollendorff:  always show canonical Möllendorff (easy to read), whatever you type in
+#   norman:       always show Norman 2013 (’velar, and ts/cy without an apostrophe)
+#   refined:      always show Refined Romanisation canonical ASCII (v/sh/q/zh/k'…), whatever you type in;
+#                  unlike input, which echoes your keystrokes, refined is the canonical form of the code points
+# A non-"input" value loads Resource/Romanization/<value>.yaml (code point → Latin) and renders
+# the composed code points through it.
+display:
+  scheme: input
+
+  # Knowledge / dictionary WINDOW rendering of the Manchu word.
+  # DICT-WINDOW DISPLAY ONLY; the main candidate window is unaffected.
+  #   false: per-character (default): one letter per cell, each in its connected (init/medi/fina) form,
+  #           with NO consonant+vowel merge; clean per-character cells, hard 1:1 with the Latin.
+  #   true:  joined: shape the whole word so letters join and the velar/labial+vowel pairs merge
+  #           (merge) into one glyph; each glyph’s romanization stacks vertically within its height.
+  cursive: false
+
+# Input behavior switches.
+input:
+  # Codepoint inserted by Shift+Space.
+  #   false (default): MVS U+180E: word/suffix breaker, letters keep
+  #                     their plain forms.
+  #   true:            NNBSP U+202F: Shift+Space also becomes an orthographic suffix connector
+  #                     (genitive-i SUFFIX FORM fires in both Noto gid493 / Baiti gid1404).
+  # '-' and Shift+Space share ONE codepoint = this switch. '--' (a connector right after a
+  # connector) is always MVS regardless, so the word-internal feminine suffix (ᠨ᠎ᠠ) stays reachable.
+  suffix_connector_narrow_no_break_space: false
+
+# How the appearance is described.
+appearance:
+  # How the g/h/k velar family is FRAMED in the candidate card description (display only; this
+  # NEVER changes what you type or the composed codepoints).
+  #   loanword  (default): native velars are ordinary letters; the loanword velars ᠺᡬᡭ are tagged
+  #                         as a supplementary loanword layer. Matches how row 2 is worded.
+  #   phonology:           native + loan velars are described as ONE velar system (native = inherited,
+  #                         following vowel harmony; loan = supplementary). For readers who take them as one system.
+  ghk_grouping: loanword
+
+  # The color theme of the candidate window: windows11 (default), soyoung, solarizeddark, court,
+  # highcontrast, beangreen, google or android. Saved changes take effect at the next key.
+  theme: windows11
+
+  # Candidate card row-3 detailed Unicode (the “U+1820 U+180B …” ground-truth line).
+  show_detailed_unicode_information: false
+
+  # Apostrophe DISPLAY glyph in Preview/Candidate. Internal character stays the plain
+  # ASCII ' (typing + parsing unchanged); this only changes the shown glyph.
+  #   modifier  (default): ʼ U+02BC MODIFIER LETTER APOSTROPHE (IPA-formal; the preferred one)
+  #   turned:              ʻ U+02BB MODIFIER LETTER TURNED COMMA
+  #   raw:                 ' U+0027 plain apostrophe (as typed)
+  apostrophe_display: modifier
+
+  # The ' KEY SEPARATOR (ZWNJ) glyph; must render VISIBLY DIFFERENT from the transliteration
+  # apostrophe above, so the two differ at a glance. Only the shown glyph changes, never its role.
+  #   middledot (default) · U+00B7 · bullet • U+2022 · hyphenationpoint ‧ U+2027 · ratio ∶ U+2236
+  #   verticalbar ¦ U+00A6
+  separator_display: middledot
+
+  # Show the current theme name in the window’s lower-left corner when the theme changes (eight themes, several of them close light palettes, so the label tells them apart).
+  show_theme_name: false
+
+# Which dictionary to use, IF one is installed. Selects Resource/Dictionary/<active>/, whose own
+# dictionary.yaml declares the romanization its index is keyed by.
+#
+# When no installed dictionary has the name given here,
+# the first installed one in name order is used.
+dictionary:
+  active: default
+
+# Floating Knowledge Window; the dictionary lookup display.
+knowledge_window:
+  # Master toggle. false means no window is created and no lookup runs in the worker.
+  enabled: true
+
+  # Whether the dictionary window is SHOWN when composition starts.
+  #
+  # false by default, so the IME presents the main window alone, and the
+  # dictionary window is something you ask for, not something you dismiss.
+  #
+  # Set this to true if you want the window up every time.
+  #
+  # Tab switches focus between the two windows while composing. F1 to F12 always belong to the host,
+  # and so does every Ctrl/Alt/Win combination.
+  visible_by_default: false
+
+  # Position offset from the main candidate window’s top-left.
+  # x_offset negative = window appears to the LEFT of the main window.
+  # y_offset zero = top-aligned with the main window.
+  x_offset: -380
+  y_offset: 0
+
+# This input method is green software. It runs from the folder you unpacked it into,
+# and taking the folder away takes the whole thing away. The one
+# exception is the registry entry, because a Windows text service is registered or it does not
+# exist. Uninstall removes that entry.
+
+# language_identifier: which Windows language this input method is registered under.
+#
+# Four hex digits: the language identifier (LANGID) the TSF profile is registered with, exactly as it
+# appears in the registry key name and in the language-tip string.
+#
+# Setup writes this value. It is the language chosen on setup’s language page, or the one given to
+# the install script with -LanguageIdentifier, and it is always a language already in your Windows
+# language list. Uninstall reads it back to remove the input method from that language. Until setup
+# has run, the value is empty.
+#
+# To move Manju IME to another language, uninstall it and run setup again. Editing this value does
+# not move an installed copy, and uninstall would then look for it under the wrong language.
+#
+# An empty value, a missing key or a missing file falls back to the built-in default.
+install:
+  language_identifier: ""

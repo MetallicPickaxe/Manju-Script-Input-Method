@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<!--
+Shared Manchu vertical rendering library.
+
+		  This is a NORMAL managed library, NOT AOT, NOT a TSF DLL. It holds the vertical-glyph
+		  drawing API the IME consumes
+
+		  Constraint chain:
+		    - Consumers of this library render Manchu vertically.
+		    - The library exposes drawing primitives; it does NOT enforce orientation at
+		      the type level. The explicit ".MongolianVertical" namespace suffix names
+		      the script and the orientation it is written for.
+		-->
+		<TargetFramework>net11.0-windows10.0.26100.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<RootNamespace>CSharpTSFInput.Rendering.MongolianVertical</RootNamespace>
+		<!-- Windows 11 21H2 (build 22000), the first Windows 11. No call in this project needs a later one. -->
+		<SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Platforms>AnyCPU;x64</Platforms>
+		<OutputType>Library</OutputType>
+		<!-- Library is consumed by an AOT-compiled host; keep AOT-friendly: no reflection-heavy patterns. -->
+		<IsAotCompatible>true</IsAotCompatible>
+	</PropertyGroup>
+</Project>

@@ -1,0 +1,73 @@
+<Project>
+  <!-- What the two programs of the delivery share: `Install Manju IME.exe` (Installer.csproj) and
+       `Uninstall Manju IME.exe` (Uninstaller\Uninstaller.csproj). Each project imports this file and
+       adds only its own name, description and entry point. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0-windows10.0.26100.0</TargetFramework>
+    <!-- Windows 11 21H2 (build 22000), the first Windows 11. No call in either program needs a later one. -->
+    <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
+    <RootNamespace>ManjuInstaller</RootNamespace>
+    <Nullable>enable</Nullable>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>AnyCPU;x64</Platforms>
+
+    <!--
+         The names match the product DLL's, so the parts of one delivery agree. -->
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Product>Manju IME</Product>
+    <Company>Pickaxe</Company>
+    <Copyright>Copyright (c) 2026 Pickaxe</Copyright>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+
+    <!-- A single self-contained exe, built with the same toolchain as the product.
+         No WiX / NSIS / MSI and no NuGet package. NativeAOT is how this repository ships
+         native binaries. -->
+    <PublishAot>true</PublishAot>
+    <!-- NO DEBUG DATA IN A SHIPPED BINARY.
+         Patching the bytes afterwards does not help: the compiler writes it every build. -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <SelfContained>true</SelfContained>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <OptimizationPreference>Size</OptimizationPreference>
+
+    <!-- The window is created with raw Win32 calls, so no UI framework is referenced. -->
+    <UseWindowsForms>false</UseWindowsForms>
+    <UseWPF>false</UseWPF>
+
+    <!-- The manifest asks for version 6 of the common controls, so buttons, lists and the progress
+         bar are drawn in the current Windows style, and declares the program aware of the system
+         DPI, so the wizard lays itself out in real pixels. It asks for no elevation: the program
+         restarts itself elevated before its wizard opens, and `whatif` runs without a prompt. -->
+    <ApplicationManifest>$(MSBuildThisFileDirectory)app.manifest</ApplicationManifest>
+
+    <!-- The icon of both programs: the word manju in Manchu letters, cut from the page the public
+         documents show (Icons\setup-source.png, made smaller for each size in this file). File
+         Explorer and the elevation prompt show it from here; the wizard window loads it from the
+         exe's own resources. -->
+    <ApplicationIcon>$(MSBuildThisFileDirectory)Icons\setup.ico</ApplicationIcon>
+
+    <!-- CoCreateInstance takes Guid* / void**, the same unsafe COM shape the rest of
+         this repository's interop uses. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <!-- TSF activation needs ITfInputProcessorProfileMgr. That interop is declared,
+       hand-written, with [PreserveSig] on every method, in the shared engine-agnostic Core library,
+       which is AOT-compatible and on the same TFM; both programs reference the Core declaration.
+       It is a project reference, not a NuGet package. -->
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CSharpTSFInput.Core\CSharpTSFInput.Core.csproj" />
+  </ItemGroup>
+
+  <!-- /Brepro: the PE TimeDateStamp becomes a hash of the output, not the wall clock.
+       Same flag as the
+       product DLL. -->
+  <ItemGroup>
+    <LinkerArg Include="/Brepro" />
+  </ItemGroup>
+</Project>
