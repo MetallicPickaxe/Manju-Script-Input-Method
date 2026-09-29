@@ -95,12 +95,8 @@ example when Microsoft Edge moves to another field on **Tab** or on a click, the
 document as you typed it: the letters you picked in their Manchu form, the others in Latin letters.
 
 In Microsoft Edge and the other programs built on Chromium, a click on another program’s window in the
-middle of a word may leave a dot in the document in place of the word. Press **Space**, **Enter** or
-**Esc** to end the word before you click away.
-
-> [!NOTE]
-> Release candidate: this case is still being measured, and the paragraph above may change in the final
-> release.
+middle of a word sometimes puts the word into the document as you typed it, and sometimes drops it. Press
+**Space**, **Enter** or **Esc** to end the word before you click away.
 
 ### Pick a form with the number keys
 
@@ -169,9 +165,9 @@ The input scheme is the spelling you type. Pick one in the settings file, `keyma
 | Abkai | `abkai` |
 | BabelPad | `babelpad` |
 | Hu | `hu` |
-| Möllendorff | `mollendorff` |
+| Möllendorff, the default | `mollendorff` |
 | Norman | `norman` |
-| Refined Romanisation (draft), the default | `refined` |
+| Refined Romanisation (draft) | `refined` |
 
 The display scheme is the spelling that the letters typed show in the candidate window,
 `display.scheme`. The default, `input`, shows what you typed; the name of an input scheme shows that

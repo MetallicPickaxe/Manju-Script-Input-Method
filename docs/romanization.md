@@ -7,9 +7,9 @@ the Latin order of their names:
 - **Abkai**, the transliteration published on the website abkai.net.
 - **BabelPad**, the Manchu input of the BabelPad text editor.
 - **Hu**, the transliteration of the Manchu dictionary edited by Hu Zengyi.
-- **Möllendorff**, the transliteration of Paul Georg von Möllendorff’s Manchu grammar of 1892.
+- **Möllendorff**, the transliteration of Paul Georg von Möllendorff’s Manchu grammar of 1892. It is the default.
 - **Norman**, the transliteration of Jerry Norman’s Manchu dictionary of 2013.
-- **Refined Romanisation (draft)**, Manju IME’s own scheme. It is the default.
+- **Refined Romanisation (draft)**, Manju IME’s own scheme.
 
 [Using Manju IME](usage.md#input-and-display-schemes) says how to pick a scheme. The tables below show
 how each scheme spells each letter, and [Where the schemes come from](#where-the-schemes-come-from)
@@ -160,7 +160,8 @@ first published in 1994, and its second edition, revised and enlarged, in Beijin
 This transliteration is named after Paul Georg von Möllendorff, and it is the one his *A Manchu
 Grammar, with Analysed Texts*, printed in Shanghai in 1892, uses. According to the Wikipedia article
 [Transliterations of Manchu](https://en.wikipedia.org/wiki/Transliterations_of_Manchu), most recent
-Western publications on Manchu use it, in the form that Norman’s dictionary gives it.
+Western publications on Manchu use it, in the form that Norman’s dictionary gives it. It is Manju IME’s
+default input scheme.
 
 ### Norman
 
@@ -174,7 +175,7 @@ the Norman system.
 
 ### Refined Romanisation (draft)
 
-Refined Romanisation (draft) is Manju IME’s own scheme and its default. It uses plain Latin letters and
+Refined Romanisation (draft) is Manju IME’s own scheme. It uses plain Latin letters and
 the apostrophe, and some letters have more than one spelling, such as `j` and `dzh`. It is a draft:
 later versions of Manju IME may change it.
 

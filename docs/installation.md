@@ -20,9 +20,10 @@ lists every change they make.
    ![The first page of Setup, with the icon of Manju IME at the top left of its window](images/setup-1-welcome.png)
 
 3. Setup asks which Windows language to list Manju IME under, and offers only the languages already
-   in your Windows language list. It leaves out a language that has no language identifier of its
-   own, the number by which Windows tells languages apart, such as Anglo-Saxon: Windows gives such a
-   language a temporary identifier and does not keep an input method under it. Then Setup asks which
+   in your Windows language list. It shows a language that has no language identifier of its own, the
+   number by which Windows tells languages apart, such as Anglo-Saxon, in gray and marked Not supported,
+   and you cannot choose it: Windows gives such a language a temporary identifier and does not keep an
+   input method under it. Then Setup asks which
    folder to run Manju IME from. By default that is the folder Manju IME is in now; for another
    folder, Setup copies Manju IME there.
 
@@ -41,6 +42,13 @@ lists every change they make.
 Microsoft Defender SmartScreen is the part of Windows that checks programs downloaded from the internet.
 Manju IME is not code-signed, so when you run the downloaded `Install Manju IME.exe`, SmartScreen may show
 **Windows protected your PC**. Click **More info**, then **Run anyway**.
+
+Smart App Control, which you turn on and off in the settings of the Windows Security app, does not offer
+that choice. Microsoft’s answers about it say: “If the app is unsigned, or the signature is invalid, Smart
+App Control will consider it untrusted and block it for your protection,” and “There is currently no way to
+bypass Smart App Control protection for individual apps.” While it is on, Setup cannot run. The same page
+says that recent Windows updates allow Smart App Control to be turned on again without a clean
+installation of Windows.
 [What Manju IME does to a computer](deployment.md#what-manju-ime-does-to-a-computer) says what the
 programs do before you run them.
 
@@ -76,6 +84,8 @@ registration of the copy whose folder is gone.
 
 ## References
 
+- Microsoft Support, [Smart App Control Frequently Asked Questions](https://support.microsoft.com/en-us/windows/smart-app-control-frequently-asked-questions-285ea03d-fa88-4d56-882e-6698afdb7003): what Smart App
+  Control blocks, and that it lets no single program through.
 - Microsoft, [MS-LCID]: Windows Language Code Identifier (LCID) Reference, section
   [Locale Names without LCIDs](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/926e694f-1797-4418-a922-343d1c5e91a6):
   the temporary identifiers that Windows gives a language without one of its own.

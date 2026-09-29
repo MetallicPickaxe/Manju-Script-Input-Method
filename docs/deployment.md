@@ -51,15 +51,16 @@ PowerShell also takes any start of a parameter name that fits only one parameter
 script refuses a parameter it does not have, a misspelled one included, and then changes nothing.
 
 The script refuses a folder that is not a full path, a folder inside the release’s own `Runtime`,
-`Installer` or `Script` folder, the folder Manju IME is installed in now, and a file; it then stops and
-changes nothing. To deploy into the current install folder, uninstall first.
+`Installer` or `Script` folder, the folder Manju IME is installed in now unless it is the release folder
+itself, and a file; it then stops and changes nothing. To deploy another release into the current install
+folder, uninstall first.
 
 The script exits with code 1 when it refuses or when a required step fails: no administrator rights, a
 language that is not in the list, a refused folder, a failed copy, a missing DLL, or a failed
 `regsvr32`, the Windows command that registers a DLL. Otherwise it exits with code 0, and its last line is
-`[DONE] Installed. Press Win+Space to switch to it.` Three steps only print a warning when they fail and
-leave the exit code at 0: the folder rights for Store apps, the language list, and switching the current
-session to the input method.
+`[DONE] Installed. Press Win+Space to switch to it.` Four steps only print a warning when they fail and
+leave the exit code at 0: reading the signature of the DLL, the folder rights for Store apps, the language
+list, and switching the current session to the input method.
 
 ## The language list is per user
 
@@ -209,6 +210,9 @@ it found, and goes on either way.
 - A user who starts the downloaded `Install Manju IME.exe` may see a warning of Microsoft Defender
   SmartScreen, the part of Windows that checks programs downloaded from the internet: [Installing Manju
   IME](installation.md#windows-protected-your-pc) says how to go on.
+- Smart App Control, turned on and off in the settings of the Windows Security app, blocks a program that
+  is not signed, and Microsoft says: “There is currently no way to bypass Smart App Control protection for
+  individual apps.” While it is on, the setup programs cannot run.
 
 ### The settings file
 
@@ -233,6 +237,10 @@ Microsoft Learn:
 - [Microsoft Defender SmartScreen](https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/)
 - [Authenticode digital signatures](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/authenticode)
 - [64-Bit Considerations](https://learn.microsoft.com/en-us/windows/win32/tsf/64-bit-platform-considerations), which describes `ctfmon.exe`
+
+Microsoft Support:
+
+- [Smart App Control Frequently Asked Questions](https://support.microsoft.com/en-us/windows/smart-app-control-frequently-asked-questions-285ea03d-fa88-4d56-882e-6698afdb7003)
 
 ## License
 
