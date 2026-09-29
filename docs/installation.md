@@ -20,10 +20,11 @@ lists every change they make.
    ![The first page of Setup, with the icon of Manju IME at the top left of its window](images/setup-1-welcome.png)
 
 3. Setup asks which Windows language to list Manju IME under, and offers only the languages already
-   in your Windows language list. Languages that Windows gives no fixed language identifier, such as
-   Anglo-Saxon, are not listed: Windows does not keep an input method under them. Then it asks which
-   folder to run Manju IME from. By default that is
-   the folder Manju IME is in now; for another folder, Setup copies Manju IME there.
+   in your Windows language list. It leaves out a language that has no language identifier of its
+   own, the number by which Windows tells languages apart, such as Anglo-Saxon: Windows gives such a
+   language a temporary identifier and does not keep an input method under it. Then Setup asks which
+   folder to run Manju IME from. By default that is the folder Manju IME is in now; for another
+   folder, Setup copies Manju IME there.
 
    ![The language page of Setup](images/setup-2-language.png)
 
@@ -72,6 +73,12 @@ registration of the copy whose folder is gone.
 ![The uninstaller while it removes Manju IME](images/uninstall-2-progress.png)
 
 ![The last page of the uninstaller](images/uninstall-3-finish.png)
+
+## References
+
+- Microsoft, [MS-LCID]: Windows Language Code Identifier (LCID) Reference, section
+  [Locale Names without LCIDs](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/926e694f-1797-4418-a922-343d1c5e91a6):
+  the temporary identifiers that Windows gives a language without one of its own.
 
 ## License
 

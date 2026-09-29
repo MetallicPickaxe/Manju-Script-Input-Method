@@ -98,6 +98,10 @@ In Microsoft Edge and the other programs built on Chromium, a click on another p
 middle of a word may leave a dot in the document in place of the word. Press **Space**, **Enter** or
 **Esc** to end the word before you click away.
 
+> [!NOTE]
+> Release candidate: this case is still being measured, and the paragraph above may change in the final
+> release.
+
 ### Pick a form with the number keys
 
 Each card shows the word with one form of the highlighted letter. To pick a form, press the number of its
