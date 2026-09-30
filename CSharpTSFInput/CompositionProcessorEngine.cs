@@ -356,7 +356,7 @@ namespace CSharpTSFInput
                 return true;
             }
 
-            // 4. PUNCTUATION. The five key and layer pairs of ManchuPunctuation give Manchu punctuation.
+            // 4. PUNCTUATION. The three key and layer pairs of ManchuPunctuation give Manchu punctuation.
             // Every other symbol key gives, in either layer, the text its keycap carries on the current
             // keyboard layout (SymbolKeycap). A key whose keycap gives no usable text goes on below.
             //
@@ -418,16 +418,16 @@ namespace CSharpTSFInput
 
         /// <summary>
         /// THE MANCHU PUNCTUATION TABLE: the only key and layer pairs that give Manchu punctuation.
-        /// ',' gives U+1802, '.' U+1803, Shift+';' U+1804, '[' U+1808, ']' U+1809. Null for every other
-        /// pair; the other layer of these keys gives its keycap (SymbolKeycap).
+        /// ',' gives U+1808, the Manchu comma; '.' U+1809, the Manchu full stop; Shift+';' U+1804, the colon,
+        /// for which Unicode has no Manchu form of its own. Null for every other pair: the other layer of
+        /// these keys, and '[' and ']' in both layers, give their keycap (SymbolKeycap). No key gives the
+        /// Mongolian comma and full stop, U+1802 and U+1803.
         /// </summary>
         internal static string? ManchuPunctuation(uint vkCode, bool shift) => (vkCode, shift) switch
         {
-            (VK_OEM_COMMA, false) => "\u1802",  // ᠂
-            (VK_OEM_PERIOD, false) => "\u1803", // ᠃
+            (VK_OEM_COMMA, false) => "\u1808",  // ᠈
+            (VK_OEM_PERIOD, false) => "\u1809", // ᠉
             (VK_OEM_1, true) => "\u1804",       // ᠄
-            (VK_OEM_4, false) => "\u1808",      // ᠈
-            (VK_OEM_6, false) => "\u1809",      // ᠉
             _ => null,
         };
 

@@ -2614,8 +2614,8 @@ namespace CSharpTSFInput
 
         // THE TAIL-APPEND SIBLING OF InsertAtFocus, for marks that are their own item.
         //
-        // The five Mongolian punctuation marks (U+1802 comma, U+1803 period,
-        // U+1804 colon, U+1808 and U+1809) are ORDINARY INPUT — each becomes a unit of its own — so they
+        // The three punctuation marks the keys give (U+1808 the Manchu comma, U+1809 the Manchu full stop,
+        // U+1804 the colon) are ORDINARY INPUT — each becomes a unit of its own — so they
         // must land where ordinary input lands: at the tail. Going through InsertAtFocus, which
         // is for marks that ATTACH to an existing unit (the apostrophe adapter, the separator, the suffix
         // connector), puts them in the wrong place: with the focus resolving
