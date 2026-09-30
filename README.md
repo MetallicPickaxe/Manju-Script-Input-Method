@@ -26,11 +26,15 @@ The first three pictures below were taken in Windows 11, one frame for each key,
 top to bottom in Microsoft Edge, and the caption under each names the input scheme it was typed with. The
 last one shows the candidate window in each of its eight themes.
 
+### A word, key by key
+
 ![With the Möllendorff input scheme, hūwašabumbi is typed one key at a time on a page written top to bottom: h, u, a tap of Shift that turns the u into ū, w, a, s, a tap of Shift that turns the s into š, and abumbi. After each key the candidate window beside the text shows the word in Manchu letters, and Space enters it](docs/images/readme-word.gif)
 
 *`hūwašabumbi` (to raise, to bring up), typed with the Möllendorff input scheme: a tap of **Shift** after
 `u` and after `s` gives `ū` and `š`, as
 [Tap Shift in the middle of a word](docs/usage.md#tap-shift-in-the-middle-of-a-word) describes.*
+
+### An aphorism, then suffixes
 
 ![A page written top to bottom, with the Möllendorff input scheme. A tap of Shift switches to Latin input, and two lines are typed: Hippocrates: ars longa, vita brevis. and Hippocrates: art is long, life is short. On the third line, Hippocrates is typed in Latin letters, a tap of Shift switches back to Manchu input, and i and gisun follow in Manchu letters, with the colon from Shift and the semicolon key; the fourth line is muten golmin, jalgan foholon. with the Manchu comma and full stop. Space enters each Manchu word. Then, on a new page, manju-i, bi-de, boo-ci, bithe-be, gurun-i, and niyalma-de, a line each, with the hyphen key before each suffix](docs/images/readme-aphorism-suffixes.gif)
 
@@ -38,6 +42,8 @@ last one shows the candidate window in each of its eight themes.
 translation; then suffixes after the `-` key. Typed with the Möllendorff input scheme: see
 [Switch between Latin and Manchu](docs/usage.md#switch-between-latin-and-manchu),
 [Punctuation](docs/usage.md#punctuation), and [Suffixes](docs/usage.md#suffixes) for the keys.*
+
+### Letters drawn as one glyph, then syllables
 
 ![A page written top to bottom, with the Möllendorff input scheme: b followed by each vowel, then p; k, g, and h followed by e, i, and u, and, with a tap of Shift for the apostrophe, by a and o; then ongko, angga, bingha, denglu, dongmo, fangnai, abla, abma, alla, comlimbi, and amma. In each, two letters are drawn as one glyph, and Space enters it. Then, on a new page, the seven syllables typed with the Abkai input scheme, three in the top row and four in the bottom row](docs/images/readme-joined-syllables.gif)
 
@@ -47,6 +53,8 @@ single shape, typed with the Möllendorff input scheme; then the seven syllable
 [Letters drawn as one glyph](docs/romanisation.md#letters-drawn-as-one-glyph) shows the pairs more slowly,
 and [Pick a form with the number keys](docs/usage.md#pick-a-form-with-the-number-keys) shows a pair drawn
 apart.*
+
+### The eight themes
 
 ![The candidate window after typing manju with the Möllendorff input scheme, in each of its eight themes: Windows 11, So Young, Solarized Dark, Court, High Contrast, Bean Green, Google, and Android](docs/images/themes.png)
 
