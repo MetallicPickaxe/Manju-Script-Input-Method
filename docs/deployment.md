@@ -41,7 +41,7 @@ copy under English (United States). The release folder can be on a local disk or
   already be in the Windows language list of the account that runs the script: the script does not add
   languages to Windows. Without this option, the script uses the Windows display language when it is in
   that list, and otherwise the first language of the list.
-- `-InstallPath`, or `-P`, takes the full path of a folder. The script copies `Runtime`, `Installer` and `Script`
+- `-InstallPath`, or `-P`, takes the full path of a folder. The script copies `Runtime`, `Installer`, and `Script`
   into it, file by file, deletes nothing in it, and registers the copy. Without this option, the input
   method is registered in the release folder itself and runs from there.
 - `-WhatIf` prints the steps the script would take, one per line, and changes nothing. It needs no
@@ -51,7 +51,7 @@ PowerShell also takes any start of a parameter name that fits only one parameter
 script refuses a parameter it does not have, a misspelled one included, and then changes nothing.
 
 The script refuses a folder that is not a full path, a folder inside the release’s own `Runtime`,
-`Installer` or `Script` folder, the folder Manju IME is installed in now unless it is the release folder
+`Installer`, or `Script` folder, the folder Manju IME is installed in now unless it is the release folder
 itself, and a file; it then stops and changes nothing. To deploy another release into the current install
 folder, uninstall first.
 
@@ -59,8 +59,8 @@ The script exits with code 1 when it refuses or when a required step fails: no a
 language that is not in the list, a refused folder, a failed copy, a missing DLL, or a failed
 `regsvr32`, the Windows command that registers a DLL. Otherwise it exits with code 0, and its last line is
 `[DONE] Installed. Press Win+Space to switch to it.` Four steps only print a warning when they fail and
-leave the exit code at 0: reading the signature of the DLL, the folder rights for Store apps, the language
-list, and switching the current session to the input method.
+leave the exit code at 0: reading the signature of the DLL, the folder rights for applications from the
+Microsoft Store, the language list, and switching the current session to the input method.
 
 ## The language list is per user
 
@@ -116,7 +116,7 @@ sign out or restart first.
 
 ## What Manju IME does to a computer
 
-This section lists what the setup programs, the scripts and the input method do to a computer. It is for
+This section lists what the setup programs, the scripts, and the input method do to a computer. It is for
 users as well as IT staff; the other guides link here.
 
 ### Installing
@@ -125,7 +125,7 @@ Installing needs administrator rights, because it registers Manju IME for the wh
 program starts itself again through the Windows elevation prompt, and the install script stops without
 them. The setup program and the install script then take these steps, in this order:
 
-1. When a folder other than the release folder is chosen, they copy `Runtime`, `Installer` and `Script`
+1. When a folder other than the release folder is chosen, they copy `Runtime`, `Installer`, and `Script`
    into it, replacing files of the same name, the settings file included, and deleting nothing.
 2. They remove the copy of Manju IME that Windows has registered, if there is one, as
    [Uninstalling](#uninstalling) describes; no file is deleted. The install script does this by running
@@ -134,7 +134,7 @@ them. The setup program and the install script then take these steps, in this or
 3. They write the chosen language into the settings file, `Runtime\Resource\Configuration\configuration.yaml`,
    as `install.language_identifier`.
 4. They give the ALL APPLICATION PACKAGES group read and execute rights on the `Runtime` folder, inherited by
-   everything in it, so that apps from the Microsoft Store can load the input method.
+   everything in it, so that applications from the Microsoft Store can load the input method.
 5. They run `regsvr32` on `Runtime\CSharpTSFInput.dll`. The DLL registers itself in the registry, the
    Windows database of settings: as a Component Object Model (COM) class, the way Windows finds a DLL by its
    number, under `HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{11A06A2B-EA6D-43D9-870C-ADF907750ACA}`, and as
@@ -153,8 +153,8 @@ to change the list; it also starts `regsvr32.exe` and `ctfmon.exe`. It starts al
 in the Windows `System32` folder, so a program of the same name in its own folder or in the current folder
 is never the one that runs; the two scripts do the same for these programs and for `reg.exe`. The
 two scripts compile small parts of C# code with `Add-Type`. Neither the setup programs nor the scripts add
-Manju IME to the Windows list of installed apps, and none of them creates a service, a scheduled task or a
-shortcut.
+Manju IME to the Windows list of installed applications, and none of them creates a service, a scheduled
+task, or a shortcut.
 
 ### While you type
 
@@ -163,9 +163,9 @@ shortcut.
 - The input method gets the keys you press through TSF, and only while it is the input method of the
   window you type in. While it is, it also watches which window of any program is in the foreground, so
   that it closes its windows and drops the letters of an unfinished word when you switch to another
-  program. Inside apps from the Microsoft Store it does not watch the foreground; Windows tells it when you
+  program. Inside applications from the Microsoft Store it does not watch the foreground; Windows tells it when you
   switch away.
-- It reads its settings file, its input schemes, its display tables and its font from the `Runtime` folder;
+- It reads its settings file, its input schemes, its display tables, and its font from the `Runtime` folder;
   the settings file can name a font in another folder. When you press a key, it checks when the settings
   file was last saved, at most every half second, and reads the file again when it has changed.
 - Its own code writes no file, keeps no log, does not read or write the registry, and makes no network
@@ -173,15 +173,15 @@ shortcut.
   type: the letters of a word are held in memory while you type it.
 - It creates windows of its own, such as the candidate window, and one thread of its own in each program
   it is loaded into.
-- In Microsoft Edge, Google Chrome and the other programs built on Chromium, and in programs that show web
+- In Microsoft Edge, Google Chrome, and the other programs built on Chromium, and in programs that show web
   pages with Microsoft Edge WebView2, the first time you type a word there it sets two Windows message
   hooks on that program’s window thread, removed when the input method is switched off in that program.
   When one of these programs ends a word itself, it leaves a dot, the placeholder of the word, in the
   document. So the input method ends the word first and puts it in as you typed it: before it passes the
-  program a key, other than Shift, Ctrl, Alt or Win alone and Caps Lock, Num Lock and Scroll Lock; and,
-  with the hooks, when a mouse button goes down in the program, when Alt is pressed with another key such
-  as D, and when another window of the same program becomes active. On Alt+Tab and Alt+Esc it drops the
-  word, as when you switch away.
+  program any key but a lock key (Caps Lock, Num Lock, or Scroll Lock) or Shift, Ctrl, Alt, or Win pressed
+  alone; and, with the hooks, when a mouse button goes down in the program, when Alt is pressed with
+  another key such as D, and when another window of the same program becomes active. On Alt+Tab and
+  Alt+Esc it drops the word, as when you switch away.
 
 ### Uninstalling
 
@@ -200,7 +200,7 @@ Both leave every file and folder, the settings file included, the rights of ALL 
 
 ### Signing
 
-The DLL, the two setup programs and the two scripts are not signed: they carry no Authenticode signature,
+The DLL, the two setup programs, and the two scripts are not signed: they carry no Authenticode signature,
 the digital signature that names the publisher of a program. Neither the setup programs nor the scripts
 require one, and Windows installs and loads the input method without one. The setup program does not check
 a signature, and its progress page says so; the install script reads the signature of the DLL, prints what
@@ -213,7 +213,7 @@ it found, and goes on either way.
 - A user who starts the downloaded `Install Manju IME.exe` may see a warning of Microsoft Defender
   SmartScreen, the part of Windows that checks programs downloaded from the internet: [Installing Manju
   IME](installation.md#windows-protected-your-pc) says how to go on.
-- Smart App Control, turned on and off in the settings of the Windows Security app, blocks a program that
+- Smart App Control, turned on and off in the settings of Windows Security, blocks a program that
   is not signed, and Microsoft says that at present no single program can be let through. While it is
   on, the setup programs cannot run.
 
@@ -245,7 +245,7 @@ Microsoft Support:
 
 - [Smart App Control Frequently Asked Questions](https://support.microsoft.com/en-us/windows/smart-app-control-frequently-asked-questions-285ea03d-fa88-4d56-882e-6698afdb7003)
 
-## License
+## Licence
 
-This guide is licensed under the Creative Commons Attribution 4.0 International license (CC BY 4.0):
+This guide is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0):
 see [LICENSE](LICENSE).

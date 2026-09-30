@@ -21,13 +21,13 @@ lists every change they make.
 
 3. Setup asks which Windows language to list Manju IME under, and offers only the languages already
    in your Windows language list. It shows a language that has no language identifier of its own, the
-   number by which Windows tells languages apart, such as Anglo-Saxon, in gray and marked Not supported,
+   number by which Windows tells languages apart, such as Anglo-Saxon, in grey and marked Not supported,
    and you cannot choose it: Windows gives such a language a temporary identifier and does not keep an
    input method under it. Then Setup asks which
    folder to run Manju IME from. By default that is the folder Manju IME is in now; for another
    folder, Setup copies Manju IME there.
 
-   ![The language page of Setup with its list open: English (United States) is chosen, and Anglo-Saxon and Esperanto are in gray, marked Not supported](images/setup-2-language.png)
+   ![The language page of Setup with its list open: English (United States) is chosen, and Anglo-Saxon and Esperanto are in grey, marked Not supported](images/setup-2-language.png)
 
    ![The folder page of Setup](images/setup-3-location.png)
 
@@ -43,7 +43,7 @@ Microsoft Defender SmartScreen is the part of Windows that checks programs downl
 Manju IME is not code-signed, so when you run the downloaded `Install Manju IME.exe`, SmartScreen may show
 **Windows protected your PC**. Click **More info**, then **Run anyway**.
 
-Smart App Control, which you turn on and off in the settings of the Windows Security app, does not offer
+Smart App Control, which you turn on and off in the settings of Windows Security, does not offer
 that choice. Microsoft’s answers about it say that it takes a program with no signature, or with a
 signature that is not valid, as untrusted and blocks it, and that at present no single program can be
 let through. While it is on, Setup cannot run. The same page says that recent Windows updates allow
@@ -66,7 +66,7 @@ Press **Win+Space** and pick Manju IME. It is listed under the language you chos
 ## Uninstall
 
 In the `Installer` folder, run `Uninstall Manju IME.exe`. It asks for administrator permission,
-removes Manju IME from your Windows language list and unregisters it. The files stay in the folder.
+removes Manju IME from your Windows language list, and unregisters it. The files stay in the folder.
 
 Uninstall first, then delete the folder. Programs you typed in keep the input method loaded until they
 close, so when Windows says a file is in use, sign out or restart, and delete the folder then.
@@ -89,7 +89,7 @@ registration of the copy whose folder is gone.
   [Locale Names without LCIDs](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/926e694f-1797-4418-a922-343d1c5e91a6):
   the temporary identifiers that Windows gives a language without one of its own.
 
-## License
+## Licence
 
 This guide, with its pictures, is licensed under the Creative Commons Attribution 4.0 International
-license (CC BY 4.0): see [LICENSE](LICENSE).
+License (CC BY 4.0): see [LICENSE](LICENSE).
