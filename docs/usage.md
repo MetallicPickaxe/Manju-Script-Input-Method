@@ -81,7 +81,7 @@ they would without an IME.
 | **Tab** | Goes to the program. Microsoft Edge, Google Chrome, and the other programs built on Chromium end the word when they get it, so Manju IME first puts the word into the document as you typed it: see [Leaving a word](#leaving-a-word). In other programs, such as Notepad, the word stays open. | Goes to the program. |
 | **Ctrl**, **Alt**, or **Win** with another key, and **F1** to **F12** | Go to the program. In Microsoft Edge, Google Chrome, and the other programs built on Chromium, Manju IME first puts the word into the document as you typed it, as it does for **Tab**; a key that takes you to another program, such as **Alt+Tab** or **Win+D**, drops the word: see [Leaving a word](#leaving-a-word). | Go to the program. |
 | **Shift**, tapped | Adds the mark or the apostrophe to the letter before it: see [Tap Shift in the middle of a word](#tap-shift-in-the-middle-of-a-word). | Switches between Latin and Manchu input: see [Switch between Latin and Manchu](#switch-between-latin-and-manchu). |
-| `'` | Separates two letters, or, pressed a second time, puts the letters typed into the document as they are, followed by an apostrophe: see [The apostrophe key](#the-apostrophe-key). | Types an apostrophe. |
+| `'` | Separates two letters, or, pressed a second time, puts the word into the document as **Enter** does and adds an apostrophe after it: see [The apostrophe key](#the-apostrophe-key). | Types an apostrophe. |
 | `-` | Inserts the Mongolian vowel separator: see [Suffixes](#suffixes). | Types a hyphen. |
 | **Shift**+**Space** | Does the same as `-`. | Starts a word that holds only the vowel separator, shown as a dot in the document, with no candidate window. |
 | `,` `.` **Shift**+`;` | Adds the Manchu comma ᠈, the Manchu full stop ᠉, or the colon ᠄ to the word: see [Punctuation](#punctuation). | Starts a word with that mark. |
@@ -149,8 +149,8 @@ each scheme.
 
 In the middle of a word, the `'` key separates two letters that would otherwise make one: `ng` gives the
 one letter ᠩ, and `n'g` gives ᠨ followed by ᡤ. The `'` key itself does not go into the document. Pressed a
-second time, it puts the letters into the document as typed, in Latin letters, followed by an
-apostrophe.
+second time, it puts the word into the document as **Enter** does, with the letters you picked in their
+Manchu form and the others in Latin letters, and adds an apostrophe after it.
 
 ![Two candidate windows with the Möllendorff input scheme: nga typed, where the letters typed show ng and a, and n, the apostrophe key, and ga typed, where they show n, g, and a](images/ng-pair.png)
 

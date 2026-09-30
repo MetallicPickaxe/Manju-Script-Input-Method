@@ -76,7 +76,7 @@ picks, after typing `manju` with the Möllendorff input scheme.*
 |---|---|---|
 | [Installing Manju IME](docs/installation.md) | Users | Setup, page by page, and the uninstaller |
 | [Using Manju IME](docs/usage.md) | Users | How typing works, the candidate window, every key, the input schemes, and the themes |
-| [Input Schemes](docs/romanisation.md) | Users | The six input schemes compared letter by letter, the spellings typed with Shift, the letters each scheme does not use, and where each scheme comes from |
+| [Input Schemes](docs/romanisation.md) | Users | The six input schemes compared letter by letter and syllable by syllable, the spellings typed with Shift, the letters each scheme does not use, the letters drawn as one glyph, and where each scheme comes from |
 | [Deploying Manju IME](docs/deployment.md) | IT staff | Unattended deployment with scripts for PowerShell, the command shell of Windows, and what Manju IME does to a computer |
 
 ## Install
