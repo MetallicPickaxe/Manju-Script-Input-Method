@@ -2,12 +2,12 @@
 
 **ᠮᠠᠨᠵᡠ ᡥᡝᡵᡤᡝᠨ** (Manju Hergen, the Manchu alphabet)
 
-Manju IME is an input method editor (IME) for Windows: a program that lets you type a script your
+Manju IME is an input method editor (IME) for Windows, designed for learners of Manchu: a program that lets you type a script your
 keyboard has no keys for, here the Manchu script. You type the spelling of a Manchu word in Latin
 letters, and a small window beside the text, the candidate window, shows the word in Manchu letters;
 press **Space**, and the word goes into your document.
 
-Manju IME is made for people who are learning Manchu. The candidate window shows one card for each form
+The candidate window shows one card for each form
 the highlighted letter can take, each card the whole word with that form, so you see how a letter changes
 with its place in the word, and a number key picks the form. Six input schemes let you type with a
 spelling you already know, and whichever of them you type with, the display scheme can show the letters
