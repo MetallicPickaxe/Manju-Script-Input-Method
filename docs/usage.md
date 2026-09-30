@@ -84,7 +84,7 @@ they would without an IME.
 | `'` | Separates two letters, or, pressed a second time, puts the letters typed into the document as they are, followed by an apostrophe: see [The apostrophe key](#the-apostrophe-key). | Types an apostrophe. |
 | `-` | Inserts the Mongolian vowel separator: see [Suffixes](#suffixes). | Types a hyphen. |
 | **Shift**+**Space** | Does the same as `-`. | Starts a word that holds only the vowel separator, shown as a dot in the document, with no candidate window. |
-| `,` `.` **Shift**+`;` `[` `]` | Adds the Manchu punctuation mark ᠂, ᠃, ᠄, ᠈, or ᠉ to the word: see [Punctuation](#punctuation). | Starts a word with that mark. |
+| `,` `.` **Shift**+`;` | Adds the Manchu comma ᠈, the Manchu full stop ᠉, or the colon ᠄ to the word: see [Punctuation](#punctuation). | Starts a word with that mark. |
 | Any other symbol key, and **Shift** with a digit | Adds the symbol printed on the key, which goes into the document as it is. | Starts a word with that symbol. |
 | **Delete**, **Home**, **End** | Change nothing. | Go to the program. |
 
@@ -144,9 +144,9 @@ apostrophe.
 
 ### Punctuation
 
-Five keys give Manchu punctuation: `,` gives ᠂, `.` gives ᠃, **Shift**+`;` gives ᠄, `[` gives ᠈, and `]`
-gives ᠉. Every other symbol key, with or without **Shift**, gives the symbol printed on it, and in the
-middle of a word the symbol joins the letters typed.
+Three keys give Manchu punctuation: `,` gives the Manchu comma ᠈, `.` gives the Manchu full stop ᠉, and
+**Shift**+`;` gives the colon ᠄. Every other symbol key, `[` and `]` included, with or without **Shift**,
+gives the symbol printed on it, and in the middle of a word the symbol joins the letters typed.
 
 ### Suffixes
 
