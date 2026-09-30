@@ -78,6 +78,19 @@ types them as those two letters.
 | ᡧᡳ | U+1867 U+1873 | `xi` | `xi` | `shi` | `ši` | `ši` | `shy` |
 | ᡰᡳ | U+1870 U+1873 | `r'i` | `zi` | `rri` | `ži` | `ži` | `zhy`, `rhy`, `r'y` |
 
+The picture below shows the seven syllables typed with the Abkai input scheme, in two rows. The table under it
+has them in the same places, each with its Möllendorff spelling and, in brackets, the Abkai spelling
+typed.
+
+![A page written top to bottom in two rows, with the Abkai input scheme: three syllables in the top row and four in the bottom row, a line each, in the places of the table below. Each is typed letter by letter, with a tap of Shift for the apostrophe, and entered with Space](images/romanisation-syllables.gif)
+
+| `dz` (`zy'`) | `ts` (`cy'`) | `sy` (`sy'`) |  |
+|---|---|---|---|
+| `jy` (`jy'`) | `c'y` (`qy'`) | `ši` (`xi`) | `ži` (`r'i`) |
+
+The picture uses Abkai because Möllendorff writes the syllable ᡯᡳ᠌ as `dz`, the same as the letter ᡯ,
+and a reader tells the two apart by their place in the word, which Manju IME 1.0.0 does not look at.
+
 ## Spellings typed with Shift
 
 These spellings are typed with a tap of **Shift** in the middle of the word: type the letters up to the
@@ -133,6 +146,13 @@ the letters typed and goes into the document as that Latin letter when the word 
 | Möllendorff | `q`, `v`, `x` |
 | Norman | `q`, `v`, `x` |
 | Refined Romanisation (draft) | `q`, `x` |
+
+## Letters drawn as one glyph
+
+The picture below shows every pair of letters that Noto Sans Mongolian, the font shipped with Manju IME,
+draws as one glyph, a single shape for the two letters, typed with the Möllendorff input scheme.
+
+![A page written top to bottom, with the Möllendorff input scheme: b followed by each vowel, then p; k, g, and h followed by e, i, and u, and, with a tap of Shift for the apostrophe, by a and o; then ongko, angga, bingha, denglu, dongmo, fangnai, abla, abma, alla, comlimbi, and amma. In each, two letters are drawn as one glyph, and Space enters it. From ongko on, Up takes the highlight back to the second letter of the pair, whose first card shows the pair joined](images/romanisation-joined.gif)
 
 ## Where the schemes come from
 

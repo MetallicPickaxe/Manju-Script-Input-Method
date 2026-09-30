@@ -71,7 +71,7 @@ they would without an IME.
 |---|---|---|
 | A letter | Adds the letter to the word. A letter that the input scheme does not use joins the letters typed as itself, and goes into the document as that Latin letter. Caps Lock, and **Shift** held with a letter, make no difference. | Starts a word. A letter that the scheme does not use goes into the document as itself. |
 | **Space** | Puts the word into the document in Manchu letters, with the forms you picked. | Types a space. |
-| **Enter** | Puts the letters you typed into the document as they are, in Latin letters. | Goes to the program. |
+| **Enter** | Puts the word into the document as you typed it: the letters you picked in their Manchu form, the others in Latin letters. | Goes to the program. |
 | **Esc** | Cancels the word: nothing goes into the document. | Goes to the program. |
 | **Backspace** | Takes back the last pick; when no letter has a pick, deletes the last letter typed. Deleting the only letter closes the candidate window. | Goes to the program. |
 | **1** to **9** and **0**, also on the numeric keypad | Picks the card with that number for the highlighted letter: see [Pick a form with the number keys](#pick-a-form-with-the-number-keys). A number with no card does nothing. | Types the digit. |
@@ -109,6 +109,14 @@ choose the letter first; **Left** and **Right** only move the highlight from car
 *`nama` typed with the Möllendorff input scheme, then **2**: the last letter shows the form of card 2, and
 the word waits for **Space**.*
 
+![Two pages written top to bottom, with the Möllendorff input scheme. On the first, julesi is typed four times, and its last letter is given card 1, 2, 3, and 4 in turn; then bithe four times: its two joined pairs joined, the first apart with 2 on i after Up three times, the second apart with 2 on the last letter, and both apart. On the second, bithe with both pairs apart twice, the pairs picked in one order and then the other; hūwašabumbi with 2 on the u of bu, then on the last letter and on the first; then ama with 2 on its last letter and Space, and ama with 2 and Enter. Each word goes on a line of its own](images/usage-pick.gif)
+
+*Forms picked with the number keys in the Möllendorff input scheme: the last letter of `julesi`
+(forward) given each of its four cards; `bithe` (book) with its two joined pairs joined or apart, where
+the order of the picks makes no difference; three letters of `hūwašabumbi` picked, the middle one first;
+and after a pick, **Space**, which enters the word in Manchu letters with the form picked, and **Enter**,
+which enters the letter picked in its Manchu form and the others in Latin letters.*
+
 ### Switch between Latin and Manchu
 
 When you are not in the middle of a word, a short tap of **Shift** switches between Latin and Manchu
@@ -118,6 +126,12 @@ input. In Latin input the keys type as they do without an IME.
 
 *`manju` in Manchu, a tap of **Shift**, `manju` in Latin letters, another tap of **Shift**, and `hergen`
 being typed, with the Möllendorff input scheme.*
+
+![A page written top to bottom, with the Möllendorff input scheme: ere, bithe, and be are typed and entered in Manchu letters; a tap of Shift switches to Latin input, and English goes in as Latin letters; another tap of Shift switches back, and gisun and de, then ubaliyambuha with the Manchu full stop, are typed and entered in Manchu letters, three lines in all](images/usage-mixed.gif)
+
+*`ere bithe be English gisun de ubaliyambuha.` (This book was translated into English.) Typed with the
+Möllendorff input scheme: a tap of **Shift** switches to Latin input for `English`, and another tap
+switches back.*
 
 ### Tap Shift in the middle of a word
 
@@ -153,6 +167,11 @@ gives the symbol printed on it, and in the middle of a word the symbol joins the
 In the middle of a word, `-` and **Shift**+**Space** insert the Mongolian vowel separator (U+180E), which
 sets a suffix apart from the word before it: `bi`, `-`, `de` gives ᠪᡳ᠎ᡩᡝ. The settings file can make them
 insert a narrow no-break space (U+202F) instead.
+
+![A page written top to bottom, with the Möllendorff input scheme: manju-i, bi-de, boo-ci, bithe-be, gurun-i, and niyalma-de, a line each. The hyphen key before each suffix inserts the Mongolian vowel separator, and Space enters the word](images/usage-suffixes.gif)
+
+*The `-` key before each suffix inserts the Mongolian vowel separator: `manju-i`, `bi-de`, `boo-ci`,
+`bithe-be`, `gurun-i`, and `niyalma-de`, typed with the Möllendorff input scheme.*
 
 ## Input and display schemes
 

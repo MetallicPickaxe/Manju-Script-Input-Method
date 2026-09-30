@@ -22,76 +22,36 @@ spelling Manchu in Latin letters, is typed with the Latin letters of a standard 
 
 ## Examples
 
-Every picture below was taken in Windows 11, one frame for each key, on a web page written top to bottom
-in Microsoft Edge; the last one shows the candidate window alone, one frame for each theme. The caption
-under each names the input scheme it was typed with.
+The first three pictures below were taken in Windows 11, one frame for each key, on a web page written
+top to bottom in Microsoft Edge, and the caption under each names the input scheme it was typed with. The
+last one shows the candidate window in each of its eight themes.
 
-![A web page written top to bottom, with the Möllendorff input scheme. The words bi, manju, gisun, and be are typed one key at a time: after each key the candidate window beside the text shows the word in Manchu letters, Space enters the word, and a second Space types a space. Then tacimbi and the full stop key, which adds the Manchu full stop, and Space enters the last word](docs/images/showcase-01-sentence.gif)
+![With the Möllendorff input scheme, hūwašabumbi is typed one key at a time on a page written top to bottom: h, u, a tap of Shift that turns the u into ū, w, a, s, a tap of Shift that turns the s into š, and abumbi. After each key the candidate window beside the text shows the word in Manchu letters, and Space enters it](docs/images/readme-word.gif)
 
-*`bi manju gisun be tacimbi.` (I study the Manchu language), typed word by word with the Möllendorff input
-scheme. **Space** enters each word, and the full stop key gives the Manchu full stop ᠃.*
+*`hūwašabumbi` (to raise, to bring up), typed with the Möllendorff input scheme: a tap of **Shift** after
+`u` and after `s` gives `ū` and `š`, as
+[Tap Shift in the middle of a word](docs/usage.md#tap-shift-in-the-middle-of-a-word) describes.*
 
-![The frames of the picture above played at about 80 milliseconds each, with the Möllendorff input scheme: the candidate window follows every key](docs/images/showcase-02-fast.gif)
+![A page written top to bottom, with the Möllendorff input scheme. A tap of Shift switches to Latin input, and two lines are typed: Hippocrates: ars longa, vita brevis. and Hippocrates: art is long, life is short. On the third line, Hippocrates is typed in Latin letters, a tap of Shift switches back to Manchu input, and i and gisun follow in Manchu letters, with the colon from Shift and the semicolon key; the fourth line is muten golmin, jalgan foholon. with the Manchu comma and full stop. Space enters each Manchu word. Then, on a new page, manju-i, bi-de, boo-ci, bithe-be, gurun-i, and niyalma-de, a line each, with the hyphen key before each suffix](docs/images/readme-aphorism-suffixes.gif)
 
-*The same frames played fast: one frame for each key, with the Möllendorff input scheme.*
+*An aphorism of Hippocrates in its Latin form (`ars longa, vita brevis`), in English, and in Manchu, our
+translation; then suffixes after the `-` key. Typed with the Möllendorff input scheme: see
+[Switch between Latin and Manchu](docs/usage.md#switch-between-latin-and-manchu),
+[Punctuation](docs/usage.md#punctuation), and [Suffixes](docs/usage.md#suffixes) for the keys.*
 
-![With the Möllendorff input scheme, enduringge is typed one key at a time. Up three times moves the highlight up the letters to i, and Down twice moves it back to g; the cards change with each move. 3 picks the card where ng is joined with the g, and Space enters the word. Then bithe is typed, Right three times moves across the four cards of its last letter, 3 picks one, and Space enters the word](docs/images/showcase-03-forms.gif)
+![A page written top to bottom, with the Möllendorff input scheme: b followed by each vowel, then p; k, g, and h followed by e, i, and u, and, with a tap of Shift for the apostrophe, by a and o; then ongko, angga, bingha, denglu, dongmo, fangnai, abla, abma, alla, comlimbi, and amma. In each, two letters are drawn as one glyph, and Space enters it. Then, on a new page, the seven syllables typed with the Abkai input scheme, three in the top row and four in the bottom row](docs/images/readme-joined-syllables.gif)
 
-*`enduringge` (holy): **Up** and **Down** move the highlight along the letters and the cards change with
-it, and **3** picks the card that joins `ng` with the `g` after it. Then `bithe` (book): **Right** moves
-across the four forms of its last letter, and **3** picks one. Möllendorff input scheme.*
+*Every pair of letters that Noto Sans Mongolian, the font shipped with Manju IME, draws as one glyph, a
+single shape, typed with the Möllendorff input scheme; then the seven syllables of the
+[Syllables](docs/romanisation.md#syllables) table, typed with the Abkai input scheme.
+[Letters drawn as one glyph](docs/romanisation.md#letters-drawn-as-one-glyph) shows the pairs more slowly,
+and [Pick a form with the number keys](docs/usage.md#pick-a-form-with-the-number-keys) shows a pair drawn
+apart.*
 
-![With the Möllendorff input scheme, gurun and be are entered, then h, u, a tap of Shift that turns the u into ū, and waliyambumbi are typed. The word has more letters than the candidate window has rows: Page Up shows the rows before and Page Down the rows after, and Space enters the word](docs/images/showcase-04-long-word.gif)
+![The candidate window after typing manju with the Möllendorff input scheme, in each of its eight themes: Windows 11, So Young, Solarized Dark, Court, High Contrast, Bean Green, Google, and Android](docs/images/themes.png)
 
-*`gurun be hūwaliyambumbi` (to bring the country into harmony): the long word has more letters than the
-window has rows, and **Page Up** and **Page Down** show the others. Möllendorff input scheme, where `ū`
-is `u` followed by a tap of **Shift**.*
-
-![With the Möllendorff input scheme, bi is entered; a tap of Shift switches to Latin input and Manju IME goes in as Latin letters; another tap of Shift switches back to Manchu input, and be and baitalambi are typed and entered in Manchu letters](docs/images/showcase-05-mixed.gif)
-
-*Manchu and Latin letters in one line, `bi Manju IME be baitalambi` (I use Manju IME): a tap of
-**Shift** switches between Manchu and Latin input. Möllendorff input scheme.*
-
-![With Refined Romanisation (draft), sy, tsy, dzy, chy, and jy are typed and each is entered with Space; in the candidate window each whole syllable takes one row of the letters typed](docs/images/showcase-06-syllables.gif)
-
-*Whole syllables, each shown as one row of the letters typed: `sy`, `tsy`, `dzy`, `chy`, and `jy`, typed
-with Refined Romanisation (draft), which, like Abkai, types all of them.*
-
-![With the Möllendorff input scheme, manju is typed, then the hyphen key, which inserts the Mongolian vowel separator, then i, and Space enters manju-i; then gisun is typed and entered. Then bi, the hyphen key, and de](docs/images/showcase-07-suffix.gif)
-
-*The Mongolian vowel separator, which sets a suffix apart, typed with the `-` key: `manju-i gisun` and
-`bi-de`, with the Möllendorff input scheme.*
-
-![With the Möllendorff input scheme, nga is typed, where ng is one letter, and entered; then n, the apostrophe key, and ga are typed: the apostrophe key separates n from g, and the word has the two letters n and g](docs/images/showcase-08-apostrophe.gif)
-
-*`nga`, where `ng` is one letter, and `n'ga`, where the `'` key separates `n` from `g`. Möllendorff
-input scheme.*
-
-![With the Möllendorff input scheme, bi manju, si monggo. is typed: the comma key adds the Manchu comma after manju, the full stop key adds the Manchu full stop after monggo, and Space enters each word](docs/images/showcase-09-punctuation.gif)
-
-*The Manchu comma and full stop in `bi manju, si monggo.` (I am Manchu, you are Mongol), typed with the
-Möllendorff input scheme.*
-
-![With Refined Romanisation (draft) and the display scheme set to Möllendorff, s, h, u, and n are typed: the letters typed show š, u, and n, and Space enters the word](docs/images/showcase-10-display-scheme.gif)
-
-*The display scheme, the spelling that the letters typed are shown in: `shun` typed with Refined
-Romanisation (draft) is shown as `šun`, the Möllendorff spelling.*
-
-![The Manchu word šun (sun) typed six times, once in each input scheme in the Latin order of their names: xun with Abkai and with BabelPad; shun with Hu; s, a tap of Shift, and un with Möllendorff and with Norman; and shun with Refined Romanisation (draft). Each time the candidate window shows the same Manchu word, and Space enters it](docs/images/showcase-11-schemes.gif)
-
-*`šun` (sun) typed in each of the six input schemes, in the Latin order of their names: `xun` with Abkai
-and with BabelPad; `shun` with Hu; `s`, a tap of **Shift**, and `un` with Möllendorff and with Norman;
-and `shun` with Refined Romanisation (draft).*
-
-![With the Möllendorff input scheme, ere manju hergen i bithe. is typed one key at a time on a page written top to bottom; Space enters each word, and the full stop key adds the Manchu full stop](docs/images/showcase-12-page.gif)
-
-*`ere manju hergen i bithe.` (This is a book in the Manchu script), typed with the Möllendorff input
-scheme.*
-
-![The candidate window after typing manju with the Möllendorff input scheme, shown in each of its eight themes in turn: Windows 11, So Young, Solarized Dark, Court, High Contrast, Bean Green, Google, and Android](docs/images/showcase-themes.gif)
-
-*The candidate window in its eight themes, sets of colours that the settings file picks, after typing
-`manju` with the Möllendorff input scheme.*
+*The candidate window in its eight [themes](docs/usage.md#themes), sets of colours that the settings file
+picks, after typing `manju` with the Möllendorff input scheme.*
 
 [Using Manju IME](docs/usage.md) has more pictures, with every key the IME uses.
 
