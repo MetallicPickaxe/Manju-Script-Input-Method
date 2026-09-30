@@ -354,11 +354,11 @@ namespace CSharpTSFInput
                 Band=TC(.149f,.545f,.824f,.55f), Card=TC(.149f,.545f,.824f,.26f), Grid=TC(.149f,.545f,.824f,1f),
                 FocusGlyph=TC(.149f,.545f,.824f,1f), Unfocused=TC(.35f,.43f,.44f,.30f), Ribbon=TC(.149f,.545f,.824f) },  // canonical Solarized blue #268BD2
             // Court: a warm gold #F7ECCF ground. The border is a quiet pale gold-brown and is outline
-            // only, so it does not compete: a saturated deep blue such as cloisonné blue #2E59A7 as the whole window's
+            // only, so it does not compete: a saturated deep blue such as cloisonné blue #2E59A7 as the whole window's
             // border colour carries enormous visual weight on a pale gold ground and reads as heavy and stiff.
             // Vermilion carries the focus: the band is **vermilion #C03A00 α.20** (composited #ECC8A6), in the same
-            // family as the Card and FocusGlyph. A cloisonné blue band at α .28 would dilute to grey over this ground
-            // (.28*(46,89,167)+.72*(247,236,207) ≈ #BFC3C4). The grid lines are gold, and cloisonné blue appears
+            // family as the Card and FocusGlyph. A cloisonné blue band at α .28 would dilute to grey over this ground
+            // (.28*(46,89,167)+.72*(247,236,207) ≈ #BFC3C4). The grid lines are gold, and cloisonné blue appears
             // only in the ribbon, as a secondary-column accent.
             new Theme { Name="Court", Bg=TC(.969f,.925f,.812f), Text=TC(.165f,.122f,.071f), Border=TC(.851f,.769f,.604f),
                 Band=TC(.753f,.227f,0f,.20f), Card=TC(.753f,.227f,0f,.11f), Grid=TC(.831f,.627f,.090f,.90f),
@@ -391,7 +391,7 @@ namespace CSharpTSFInput
         private int _themeIndex = 0;
         private D2D1_COLOR_F _bgColor = new D2D1_COLOR_F { r = 1, g = 1, b = 1, a = 1 };
         // Per-UNIT prefix grid (digraph-aware). _latinUnits[i] = canonical
-        // Möllendorff display form of unit i (e.g. "ng", "ž", "c" — NOT the raw per-char echo);
+        // Möllendorff display form of unit i (e.g. "ng", "ž", "c" — NOT the raw per-char echo);
         // _unitStarts[i] = the unit's first char offset in _rawInput. Row indices everywhere in the
         // prefix grid (focus, band, clicks, EnqueueFocusChange, MarkPositionSelected) are UNIT indices —
         // matching the engine's selection/candidate model (BuildCommitString iterates units).
@@ -770,7 +770,7 @@ namespace CSharpTSFInput
         // additively extended by NewColumnTotalWidth via 2-stage resize in CalculateAndResizeWindow's
         // sibling logic — see EnsureFourColumnSizing().
         private const float IndexColumnWidth = 26f;   // 13px bold 1-2 digit fits this width (usable 22px)
-        // 34 fits 3-char Möllendorff units ("ts'", "c'y") + diacritics at full
+        // 34 fits 3-char Möllendorff units ("ts'", "c'y") + diacritics at full
         // metadata font size (DrawMetadataText auto-shrinks past this width, but 34 avoids shrink).
         private const float LatinColumnWidth = 34f;   // 13px bold 1-2 char Latin fits this width (usable 30px); longer apostrophe strings auto-shrink
         private const float MongolianColumnWidth = 38f;
@@ -5170,7 +5170,7 @@ namespace CSharpTSFInput
         //
         // Row model = tokenized UNITS (_latinUnits), not raw
         // keystrokes: a digraph ("ng"/"zh"/"tsh") is ONE row, Latin cell shows its canonical
-        // Möllendorff form, and row indices equal the engine's unit positions (BuildCommitString /
+        // Möllendorff form, and row indices equal the engine's unit positions (BuildCommitString /
         // candidate matrix / MarkPositionSelected all iterate units), so Latin cannot show
         // n+g on two rows against one ᠩ glyph.
         //
@@ -5342,7 +5342,7 @@ namespace CSharpTSFInput
             colX += IndexColumnWidth + NewColumnGap;
 
             // Latin column — one row per tokenized UNIT, showing the canonical
-            // Möllendorff display form ("ng" one row; "zh"→"ž", "tsh"→"c", "v"→"ū") — the public-facing
+            // Möllendorff display form ("ng" one row; "zh"→"ž", "tsh"→"c", "v"→"ū") — the public-facing
             // romanization, regardless of which input alias was typed.
             var latinUnitsSafe = _latinUnits ?? new List<string>();
             // Shared per-unit iteration (same helper the knowledge window uses, so a
@@ -5735,7 +5735,7 @@ namespace CSharpTSFInput
                 float textX = x + (cardWidth - effectiveWidth) / 2.0f;
                 PaintSpanMetrics paintSpanMetrics = ComputePaintSpanMetrics(textX, textX + effectiveWidth, x, x + cardWidth);
 
-                // Use system font with fallback for metadata (avoids tofu for CJK/Latin text)
+                // Use system font with fallback for metadata (avoids tofu for Latin and other scripts)
                 // brushOverride: row 3 (Unicode ground truth) draws with the theme-following de-emphasis brush.
                 ManjuDirectWriteRenderer.DrawTextWithSystemFont(
                     _renderTarget,

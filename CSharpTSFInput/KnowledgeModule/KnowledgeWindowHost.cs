@@ -47,7 +47,7 @@ namespace CSharpTSFInput.UI
         // comparison:
         //   34 spine (1st col, native) + 8 + 30 col3 fused + 8 + 30 col4 separated + 8 + 30 Latin = 148. (tunable)
         // The explicit 8 DIP Manchu↔Latin gap keeps the Latin clearly separated from the Manchu.
-        // The Latin annotation is 30 wide so MULTI-LETTER units (NG/DZ/TS'/Ū…) draw
+        // The Latin annotation is 30 wide so MULTI-LETTER units (NG/DZ/TS'/Ū…) draw
         // horizontally in one row (the dictionary's Latin column must fit several letters across).
         // The width gives the joined column room, so entries don't overlap.
         private const float ColGroupWidth = 148f;
@@ -1568,7 +1568,7 @@ namespace CSharpTSFInput.UI
                 if (entriesSnap.Count > 0 && glossIdx < entriesSnap.Count)
                 {
                     var glossEntry = entriesSnap[glossIdx];
-                    // [GLOSS-SEPARATOR] Separator between our Möllendorff romanization and the English gloss.
+                    // [GLOSS-SEPARATOR] Separator between our Möllendorff romanization and the English gloss.
                     // The bracketed tag above marks this plain-comma separator.
                     // The IME adds this separator itself (it is not from the source dictionary), so it
                     // is a plain comma: a middle dot is a Japanese convention, irrelevant to Manchu/Mongolian.

@@ -171,9 +171,9 @@ namespace CSharpTSFInput.KnowledgeModule
             if (!_enabled || !_dict.IsLoaded) return;
             // Look up by composed Manchu SCRIPT (codepoints), not by
             // any romanization. The engine turns the raw input (whatever scheme) into codepoints; the
-            // dictionary transliterates those codepoints to ITS OWN index form (Möllendorff) internally.
-            // So lookup works identically for every input scheme and the engine carries no Möllendorff
-            // assumption. (An ASCII romanization key would miss the diacritic words of the Möllendorff index.)
+            // dictionary transliterates those codepoints to ITS OWN index form (Möllendorff) internally.
+            // So lookup works identically for every input scheme and the engine carries no Möllendorff
+            // assumption. (An ASCII romanization key would miss the diacritic words of the Möllendorff index.)
             string script = _engine.GetTranslatedTextFromSnapshot(snapshot ?? string.Empty);
             var matches = _dict.LookupByScript(script);
             // Graceful degradation — never blank out mid-word. If the FULL composed script

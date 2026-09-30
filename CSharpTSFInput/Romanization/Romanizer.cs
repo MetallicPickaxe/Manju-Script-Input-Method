@@ -8,7 +8,7 @@ namespace CSharpTSFInput.Romanization
     /// <summary>
     /// A data-driven romanizer: maps a Manchu-SCRIPT code-point
     /// string to a Latin form, using a mapping ASSET (YAML) rather than hardcoded tables. One
-    /// <see cref="Romanizer"/> = one loaded mapping (e.g. Möllendorff, Abkai).
+    /// <see cref="Romanizer"/> = one loaded mapping (e.g. Möllendorff, Abkai).
     ///
     /// This one mechanism serves two mappings (the model being that code points are the core
     /// asset; a romanization is a code-point→Latin map):
@@ -125,7 +125,7 @@ namespace CSharpTSFInput.Romanization
 
         /// <summary>Like <see cref="Transliterate"/> but returns each matched UNIT as its own segment
         /// together with the number of code points it consumed. Lets callers keep a multi-letter
-        /// romanization (e.g. ng, dz, ū, ts) together and align it to the glyph(s)/unit it came from
+        /// romanization (e.g. ng, dz, ū, ts) together and align it to the glyph(s)/unit it came from
         /// (used by the knowledge window's per-row Latin annotation). Unknown code points become
         /// 1-code-point identity segments; an empty mapping (e.g. a stripped FVS) yields a segment
         /// with empty Latin that still advances the code-point cursor.</summary>

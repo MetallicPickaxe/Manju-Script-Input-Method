@@ -116,15 +116,15 @@ namespace CSharpTSFInput.WordDictionary
         //   Shape A (pos == "romanization"):
         //     {"word": "de", "pos": "romanization",
         //      "senses": [{"alt_of": [{"word": "ᡩᡝ"}], "glosses": [...]}]}
-        //     → word == Möllendorff Latin, Manchu script in senses[].alt_of[0].word
+        //     → word == Möllendorff Latin, Manchu script in senses[].alt_of[0].word
         //
         //   Shape B (pos == "noun"/"verb"/etc.):
         //     {"word": "ᡩᡝ", "pos": "noun",
         //      "forms": [{"form": "de", "tags": ["romanization"]}, ...],
         //      "senses": [{"glosses": [...]}]}
-        //     → word == Manchu script, Möllendorff in forms[].form where tags contains "romanization"
+        //     → word == Manchu script, Möllendorff in forms[].form where tags contains "romanization"
         //
-        // We extract BOTH a Manchu-script form and a Möllendorff Latin form whenever possible.
+        // We extract BOTH a Manchu-script form and a Möllendorff Latin form whenever possible.
         private static LemmaEntry? TryParseLemma(string jsonLine)
         {
             try
@@ -167,13 +167,13 @@ namespace CSharpTSFInput.WordDictionary
 
                 if (pos == "romanization")
                 {
-                    // word is Möllendorff
+                    // word is Möllendorff
                     mollendorff = word;
                     // manchuScript already set from alt_of above (if present)
                 }
                 else
                 {
-                    // word is Manchu script; look for Möllendorff in forms[]
+                    // word is Manchu script; look for Möllendorff in forms[]
                     manchuScript = word;
                     if (root.TryGetProperty("forms", out var forms) && forms.ValueKind == JsonValueKind.Array)
                     {
@@ -253,12 +253,12 @@ namespace CSharpTSFInput.WordDictionary
         }
 
         /// <summary>
-        /// Look up lemmas matching a Möllendorff prefix. Returns empty list when not loaded or no
+        /// Look up lemmas matching a Möllendorff prefix. Returns empty list when not loaded or no
         /// match. Result is bounded (max 32 entries) to keep candidate list manageable.
         /// </summary>
         // Fold a romanization to the form the index actually stores. Our canonical
         // romanizations are authored with COMBINING diacritics + the TYPOGRAPHIC apostrophe U+2018,
-        // but the index keys on disk are PRECOMPOSED (ū/š/ž = U+016B/0161/017E)
+        // but the index keys on disk are PRECOMPOSED (ū/š/ž = U+016B/0161/017E)
         // and ASCII apostrophe U+0027. Normalize the query to match — applied to every lookup, so both
         // the script path (LookupByScript → combining + ‘) and direct callers compare on equal terms.
         // (The index data is already in the precomposed/ASCII form, so this is a no-op on it.)

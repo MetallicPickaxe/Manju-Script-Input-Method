@@ -12,7 +12,7 @@ namespace CSharpTSFInput.UI
     /// multi-code-point unit like ᡮᡟ advances the glyph row by 2), skipping empty segments, and
     /// letting the caller stop early (clip). It does NOT draw and does NOT decide the unit source:
     /// each caller supplies its own units (the main window's input display units vs the
-    /// dictionary's own Möllendorff segments, two different romanizations by design) and its own
+    /// dictionary's own Möllendorff segments, two different romanizations by design) and its own
     /// draw call, so each window controls its own visual.
     /// </summary>
     internal static class LatinUnitLayout

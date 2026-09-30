@@ -1278,7 +1278,7 @@ namespace CSharpTSFInput.ManjuShaper
             }
         }
 
-        // --- System font text rendering (for metadata with CJK/Latin fallback) ---
+        // --- System font text rendering (for metadata, with fallback for Latin and other scripts) ---
 
         private static volatile nint _systemTextFormat;
         private static volatile float _systemTextFormatSize;
@@ -1288,7 +1288,7 @@ namespace CSharpTSFInput.ManjuShaper
         private static volatile float _systemTextFormatBoldSize;
 
         /// <summary>
-        /// Draw text using DirectWrite's DrawText with a system font (supports CJK/Latin fallback).
+        /// Draw text using DirectWrite's DrawText with a system font (supports fallback for Latin and other scripts).
         /// Used for metadata rows where Mongolian-only font would produce tofu.
         /// </summary>
         public static unsafe void DrawTextWithSystemFont(

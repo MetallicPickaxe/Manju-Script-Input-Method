@@ -192,8 +192,8 @@ namespace CSharpTSFInput
                     // Two-phase Backspace: if any explicit candidate pick
                     // exists, UNDO the last pick first — highest position, back→front by sequence — WITHOUT deleting
                     // a raw char; refresh with focus on the un-picked position so its preview reverts. Only after ALL
-                    // picks are undone does Backspace fall through to deleting raw input chars (the East Asian IME
-                    // rule). Each Backspace pops exactly one pick.
+                    // picks are undone does Backspace fall through to deleting raw input chars (the rule of other
+                    // IMEs). Each Backspace pops exactly one pick.
                     int unpickedPos = Engine.UnpickHighestSelectedPosition();
                     if (unpickedPos >= 0)
                     {

@@ -15,7 +15,7 @@ namespace CSharpTSFInput.WordDictionary
         /// <summary>Manchu-script headword (e.g. "ᠰᠠᡥᠠᠯᡳᠶᠠᠨ ᡠᠯᠠ"). Unicode codepoints.</summary>
         public string Word { get; }
 
-        /// <summary>Möllendorff Latin romanization (e.g. "sahaliyan ula"). Index key.</summary>
+        /// <summary>Möllendorff Latin romanization (e.g. "sahaliyan ula"). Index key.</summary>
         public string Mollendorff { get; }
 
         /// <summary>Part of speech tag as the corpus gives it (noun / verb / adjective / particle / ...).</summary>
@@ -29,7 +29,7 @@ namespace CSharpTSFInput.WordDictionary
 
         /// <summary>Per-unit romanization segments of <see cref="Word"/> (digraph-aware),
         /// each with the code-point count it spans. Lets the knowledge window draw multi-letter units
-        /// (ng/dz/ū/ts) horizontally at their glyph row instead of one char per glyph. Populated lazily
+        /// (ng/dz/ū/ts) horizontally at their glyph row instead of one char per glyph. Populated lazily
         /// at lookup time (needs the dictionary's romanizer); null until then.</summary>
         public IReadOnlyList<(string latin, int cpLen)>? RomanSegments { get; set; }
 

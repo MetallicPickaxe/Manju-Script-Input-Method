@@ -811,7 +811,7 @@ namespace CSharpTSFInput
         }
 
         // Build the commit string for upstream (TSF SetText / EndComposition).
-        // As in East Asian IMEs: selected positions render as the chosen
+        // As in other IMEs: selected positions render as the chosen
         // Mongolian codepoint sequence; UNSELECTED positions commit as the raw Latin character.
         // Result is a mixed Mongolian + Latin string the host application receives directly.
         //
@@ -868,7 +868,7 @@ namespace CSharpTSFInput
                     // Unselected-position output depends on the call path:
                     //   COMMIT (unselectedAsPrimary=true): emit the PRIMARY (default Mongolian) so
                     //     space/enter with no explicit pick commits the whole default set (the first candidate), like a
-                    //     mature East Asian IME defaulting to the top candidate,
+                    //     mature IME defaulting to the top candidate,
                     //     NOT the raw typed Latin.
                     //   LIVE / preview (default false): keep the raw Latin echo so the
                     //     inline composition still shows what the user typed as they type.
@@ -980,7 +980,7 @@ namespace CSharpTSFInput
         public const char SeparatorMarker = (char)0x200C;   // ZWNJ zero-width non-joiner = the ' key's separator
 
         // Right-Shift escape action: if the buffer ends in an escapable letter, append the U+0027
-        // escape marker so the tokenizer specializes it (k→ᠺ, r→ža, or breaks a digraph). Returns true if
+        // escape marker so the tokenizer specializes it (k→ᠺ, r→ža, or breaks a digraph). Returns true if
         // it inserted (so the caller refreshes). No-op when there is no escapable previous letter:
         // if the previous letter has no such capability, the right Shift does nothing.
         public bool ApplyShiftEscape()
@@ -1007,13 +1007,13 @@ namespace CSharpTSFInput
 
             // The apostrophe also completes letters that begin at an earlier unit, as in Abkai `cy'`,
             // whose c and y stay two units until the apostrophe joins them; and it goes in where a longer key
-            // needs it before its last letters are typed, as in Möllendorff `c'y`. ApostropheStemAtFocus
+            // needs it before its last letters are typed, as in Möllendorff `c'y`. ApostropheStemAtFocus
             // finds those letters.
             string? stem = ApostropheStemAtFocus();
             if (stem == null)
             {
                 // With no such letters, a letter the scheme also spells with a diacritic takes that
-                // spelling, as `u`, `s` and `z` take `ū`, `š` and `ž` in Möllendorff and Norman. That also
+                // spelling, as `u`, `s` and `z` take `ū`, `š` and `ž` in Möllendorff and Norman. That also
                 // returns true.
                 string? marked = MarkedSpellingOf(lk);
                 if (marked != null)
@@ -1029,7 +1029,7 @@ namespace CSharpTSFInput
         }
 
         // The key of the scheme that is this letter with diacritics, found by canonical
-        // decomposition (NFD): `ū` for `u` in Möllendorff. Null when the scheme has none, and when it has more
+        // decomposition (NFD): `ū` for `u` in Möllendorff. Null when the scheme has none, and when it has more
         // than one, since one tap cannot choose between them.
         private string? MarkedSpellingOf(string letter)
         {
@@ -1652,7 +1652,7 @@ namespace CSharpTSFInput
         //   refined → hu, buffer "k'ata":  183A 1820 1868 1820 → 1874 1820 1868 1820
         //     the loan velar k' silently becomes a plain k, because ' is not part of a token in hu.
         //   hu → refined, buffer "guusa":  4 units → 5 units, 1864 1861 … → 1864 1860 1860 …
-        //     ū splits into u+u, so every unit index after the first moves.
+        //     ū splits into u+u, so every unit index after the first moves.
         // Selection state is keyed BY UNIT INDEX, so the second case shifts the ground
         // under any pick the user had already made. That is a reason to stop instead of working
         // around it, so the switch does not touch a live composition at all.
@@ -1663,7 +1663,7 @@ namespace CSharpTSFInput
 
 
         // THE DISPLAY-SCHEME AXIS: display.scheme. Seven values: "input" (mirror what was typed) plus the
-        // six romanizations. Independent of the input scheme: you can type in hu and read it back in Möllendorff.
+        // six romanizations. Independent of the input scheme: you can type in hu and read it back in Möllendorff.
         private static readonly string[] DisplaySchemes =
             { "input", "refined", "mollendorff", "norman", "hu", "abkai", "babelpad" };
         private string? _displaySchemeOverride;
@@ -1946,7 +1946,7 @@ namespace CSharpTSFInput
         // THE SWITCH TOAST: one line, on screen for a few seconds, after any setting change.
         //
         // An input-scheme switch made during a composition is DEFERRED, because re-reading a live buffer
-        // silently demotes `k'` to `k` and splits `ū` into `u`+`u`, shifting every index after it. The
+        // silently demotes `k'` to `k` and splits `ū` into `u`+`u`, shifting every index after it. The
         // rest of that word still uses the old scheme, and the toast says so with the suffix below. The
         // suffix appears ONLY on that path.
         //
@@ -2639,7 +2639,7 @@ namespace CSharpTSFInput
         {
             char lower = Char.ToLower(c);
             if (lower == '\'') return true;
-            // Also the base letter of a key written with a diacritic (NFD), so that Möllendorff `ž`
+            // Also the base letter of a key written with a diacritic (NFD), so that Möllendorff `ž`
             // can begin a word: z, then the Shift tap.
             foreach (var k in Dictionary_Mappings.Keys)
                 if (k.Length > 0 && Char.ToLower(CanonicalDecomposition(k)[0]) == lower) return true;
@@ -2679,8 +2679,8 @@ namespace CSharpTSFInput
 
         // The engine holds NO dictionary-romanization map; dict
         // lookup transliterates composed code points inside the dictionary module (the dictionary's
-        // own Romanizer). An engine-side Möllendorff map would hard-bind
-        // the engine to Möllendorff.
+        // own Romanizer). An engine-side Möllendorff map would hard-bind
+        // the engine to Möllendorff.
         //
         // ON-SCREEN romanization is a SEPARATE, customisable layer: each unit's display string is
         // resolved by DisplayFormForKey, backed by the active scheme's OPTIONAL `display:` section
@@ -2692,7 +2692,7 @@ namespace CSharpTSFInput
 
         // Optional FIXED display romanization, selected by config
         // `display.scheme`. null => MIRROR the input scheme (what you type is what you see, token-based DisplayFormForKey).
-        // Non-null => render each unit's code points through this romanizer (e.g. always Möllendorff /
+        // Non-null => render each unit's code points through this romanizer (e.g. always Möllendorff /
         // Abkai), INDEPENDENT of what was typed. Loaded from Resource/Romanization/<scheme>.yaml.
         private CSharpTSFInput.Romanization.Romanizer? _displayRomanizer;
 

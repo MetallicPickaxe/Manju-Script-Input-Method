@@ -1914,7 +1914,7 @@ namespace CSharpTSFInput
 					    // While composing, the host's edit area holds only a **small placeholder** (·), not the
 					    // full input string. Writing the full string would collapse the selection to its end on every
 					    // key, dragging the host caret along, which is painful in Word's large vertical type and makes
-					    // the window position drift. An East Asian IME keeps the host caret essentially still until
+					    // the window position drift. Other IMEs keep the host caret essentially still until
 					    // commit, and this matches that. The Preview/Candidate windows carry the whole visualisation
 					    // of the input sequence. On commit the final string overwrites the placeholder; an
 					    // external terminate goes through OnCompositionTerminated, which swaps the placeholder back to the
