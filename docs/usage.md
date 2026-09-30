@@ -160,7 +160,9 @@ Manchu form and the others in Latin letters, and adds an apostrophe after it.
 
 Three keys give Manchu punctuation: `,` gives the Manchu comma ᠈, `.` gives the Manchu full stop ᠉, and
 **Shift**+`;` gives the colon ᠄. Every other symbol key, `[` and `]` included, with or without **Shift**,
-gives the symbol printed on it, and in the middle of a word the symbol joins the letters typed.
+gives the symbol printed on it, and in the middle of a word the symbol joins the letters typed, except for
+`'` and `-` without **Shift**: there `'` separates two letters and `-` inserts the Mongolian vowel
+separator, as [The apostrophe key](#the-apostrophe-key) and [Suffixes](#suffixes) describe.
 
 ### Suffixes
 
