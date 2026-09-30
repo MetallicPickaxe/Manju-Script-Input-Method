@@ -31,9 +31,9 @@ under each names the input scheme it was typed with.
 *`bi manju gisun be tacimbi.` (I study the Manchu language), typed word by word with the Möllendorff input
 scheme. **Space** enters each word, and the full stop key gives the Manchu full stop ᠃.*
 
-![The sentence of the picture above typed at about 80 milliseconds a key, with the Möllendorff input scheme: the candidate window follows every key](docs/images/showcase-02-fast.gif)
+![The frames of the picture above played at about 80 milliseconds each, with the Möllendorff input scheme: the candidate window follows every key](docs/images/showcase-02-fast.gif)
 
-*The same sentence typed fast, with the Möllendorff input scheme.*
+*The same frames played fast: one frame for each key, with the Möllendorff input scheme.*
 
 ![With the Möllendorff input scheme, enduringge is typed one key at a time. Up three times moves the highlight up the letters to i, and Down twice moves it back to g; the cards change with each move. 3 picks the card where ng is joined with the g, and Space enters the word. Then bithe is typed, Right three times moves across the four cards of its last letter, 3 picks one, and Space enters the word](docs/images/showcase-03-forms.gif)
 
@@ -55,7 +55,7 @@ is `u` followed by a tap of **Shift**.*
 ![With Refined Romanisation (draft), sy, tsy, dzy, chy and jy are typed and each is entered with Space; in the candidate window each whole syllable takes one row of the letters typed](docs/images/showcase-06-syllables.gif)
 
 *Whole syllables, each shown as one row of the letters typed: `sy`, `tsy`, `dzy`, `chy` and `jy`, typed
-with Refined Romanisation (draft), the input scheme that types all of them.*
+with Refined Romanisation (draft), which, like Abkai, types all of them.*
 
 ![With the Möllendorff input scheme, manju is typed, then the hyphen key, which inserts the Mongolian vowel separator, then i, and Space enters manju-i; then gisun is typed and entered. Then bi, the hyphen key and de](docs/images/showcase-07-suffix.gif)
 
